@@ -98,7 +98,7 @@ namespace redfish {
         
     private:
         
-        void doGet(crow::Response& res, const crow::Request& req,
+       /* void doGet(crow::Response& res, const crow::Request& req,
                 const std::vector<std::string>& params) override {
             
             auto asyncResp = std::make_shared<AsyncResp>(res);
@@ -144,7 +144,7 @@ namespace redfish {
             "xyz.openbmc_project.Ssdarray.Firmware", "/xyz/openbmc_project/ssdarray/firmware",
             "org.freedesktop.DBus.Properties", "GetAll",
             "xyz.openbmc_project.Ssdarray.Activate");
-        }
+        }*/
         
     };
     
@@ -171,7 +171,7 @@ namespace redfish {
         
     private:
         
-        void doGet(crow::Response& res, const crow::Request& req,
+        /*void doGet(crow::Response& res, const crow::Request& req,
                 const std::vector<std::string>& params) override {
             
             auto asyncResp = std::make_shared<AsyncResp>(res);
@@ -217,11 +217,11 @@ namespace redfish {
             "/xyz/openbmc_project/ssdarray/firmware",
             "org.freedesktop.DBus.Properties", "GetAll",
             "xyz.openbmc_project.Ssdarray.Ready");
-        }
+        }*/
     
     };
     
-    class Update : public Node {
+    /*class Update : public Node {
     public:
         
        Update(CrowApp& app) : Node(app, "/redfish/v1/Switch/FirmwareService/Update/") {
@@ -366,7 +366,7 @@ namespace redfish {
             "Value", std::variant<uint32_t>(*imageId));           
         }
          
-    };
+    };*/
     
 }
 
