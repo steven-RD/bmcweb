@@ -270,15 +270,14 @@ namespace redfish {
                     propertiesList) {
                 if (ec) {
                     BMCWEB_LOG_ERROR << "D-Bus responses error: " << ec;
-                            messages::resourceNotFound(
-                            asyncResp->res, "#Update.v1_0_3.Update", imageId);
+                    messages::internalError(asyncResp->res);
                     return;
                 }
-                for(const std::pair<std::string, uint32_t>& 
+                for(const std::pair<std::string, uint32_t>&  
                         property : propertiesList) {
                     if(property.first == "Value") {
-                        const std::string* value = 
-                                std::get_if<uint32_t>(&property.second);
+                        const uint32_t* value = (&property.second);
+                                //std::get_if<std::string>(&property.second);
                         if(value != nullptr){
                             asyncResp->res.jsonValue["Value"] = *value;
                         }
@@ -344,14 +343,13 @@ namespace redfish {
                     propertiesList) {
                 if (ec) {
                     BMCWEB_LOG_ERROR << "D-Bus responses error: " << ec;
-                    messages::resourceNotFound(
-                    asyncResp->res, "#Update.v1_0_3.Update", imageId);
+                    messages::internalError(asyncResp->res);
                     return;
                 }
                 for(const std::pair<std::string, uint32_t>& 
                         property : propertiesList) {
                     if(property.first == "Value") {
-                        const std::string* value = (&property.second);
+                        const uint32_t* value = (&property.second);
                                 //std::get_if<uint32_t>(&property.second);
                         if(value != nullptr){
                             asyncResp->res.jsonValue["Value"] = *value;
