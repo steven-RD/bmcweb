@@ -98,7 +98,7 @@ namespace redfish {
         
     private:
         
-       /* void doGet(crow::Response& res, const crow::Request& req,
+        void doGet(crow::Response& res, const crow::Request& req,
                 const std::vector<std::string>& params) override {
             
             auto asyncResp = std::make_shared<AsyncResp>(res);
@@ -144,7 +144,7 @@ namespace redfish {
             "xyz.openbmc_project.Ssdarray.Firmware", "/xyz/openbmc_project/ssdarray/firmware",
             "org.freedesktop.DBus.Properties", "GetAll",
             "xyz.openbmc_project.Ssdarray.Activate");
-        }*/
+        }
         
     };
     
@@ -171,7 +171,7 @@ namespace redfish {
         
     private:
         
-        /*void doGet(crow::Response& res, const crow::Request& req,
+        void doGet(crow::Response& res, const crow::Request& req,
                 const std::vector<std::string>& params) override {
             
             auto asyncResp = std::make_shared<AsyncResp>(res);
@@ -198,15 +198,15 @@ namespace redfish {
                     for(const std::pair<std::string, std::string>& 
                             property : propertiesList) {
                         if(property.first == "Type") {
-                            const std::string* value = 
-                                    std::get_if<std::string>(&property.second);
+                            const std::string* value = (&property.second);
+                                    //std::get_if<std::string>(&property.second);
                             if(value != nullptr){
                                 asyncResp->res.jsonValue["Type"] = *value;
                             }
                         }
                         if(property.first == "Version") {
-                            const std::string* value = 
-                                    std::get_if<std::string>(&property.second);
+                            const std::string* value = (&property.second);
+                                    //std::get_if<std::string>(&property.second);
                             if(value != nullptr) {
                                 asyncResp->res.jsonValue["Version"] = *value;
                             }
@@ -217,7 +217,7 @@ namespace redfish {
             "/xyz/openbmc_project/ssdarray/firmware",
             "org.freedesktop.DBus.Properties", "GetAll",
             "xyz.openbmc_project.Ssdarray.Ready");
-        }*/
+        }
     
     };
     
