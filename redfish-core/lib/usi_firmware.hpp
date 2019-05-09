@@ -221,7 +221,7 @@ namespace redfish {
     
     };
     
-    /*class Update : public Node {
+    class Update : public Node {
     public:
         
        Update(CrowApp& app) : Node(app, "/redfish/v1/Switch/FirmwareService/Update/") {
@@ -259,8 +259,8 @@ namespace redfish {
 //                return;
 //            }           
 //            const uint32_t& imageId = params[0];
-            uint32_t& imageId = 0;
-             if (!json_util::readJson(req, res, "Value", imageId)) {
+            uint32_t imageId = 0;
+            if (!json_util::readJson(req, res, "Value", imageId)) {
                 return;
             }
             crow::connections::systemBus->async_method_call(
@@ -289,7 +289,7 @@ namespace redfish {
             "/xyz/openbmc_project/switch/firmware",
             "org.freedesktop.DBus.Properties", "Set",
             "xyz.openbmc_project.Switch.Firmware.Update", 
-            "Value", std::variant<uint32_t>(*imageId));           
+            "Value", imageId);   ///std::variant<uint32_t>(*imageId)        
         }
         
     };
@@ -333,8 +333,8 @@ namespace redfish {
 //                return;
 //            }           
 //            const uint32_t& imageId = params[0];
-            uint32_t& imageId = 0;
-             if (!json_util::readJson(req, res, "Value", imageId)) {
+            uint32_t imageId = 0;
+            if (!json_util::readJson(req, res, "Value", imageId)) {
                 return;
             }
             crow::connections::systemBus->async_method_call(
@@ -344,15 +344,15 @@ namespace redfish {
                     propertiesList) {
                 if (ec) {
                     BMCWEB_LOG_ERROR << "D-Bus responses error: " << ec;
-                            messages::resourceNotFound(
-                            asyncResp->res, "#Update.v1_0_3.Update", imageId);
+                    messages::resourceNotFound(
+                    asyncResp->res, "#Update.v1_0_3.Update", imageId);
                     return;
                 }
                 for(const std::pair<std::string, uint32_t>& 
                         property : propertiesList) {
                     if(property.first == "Value") {
-                        const std::string* value = 
-                                std::get_if<uint32_t>(&property.second);
+                        const std::string* value = (&property.second);
+                                //std::get_if<uint32_t>(&property.second);
                         if(value != nullptr){
                             asyncResp->res.jsonValue["Value"] = *value;
                         }
@@ -363,10 +363,10 @@ namespace redfish {
             "/xyz/openbmc_project/switch/firmware",
             "org.freedesktop.DBus.Properties", "Set",
             "xyz.openbmc_project.Switch.Firmware.Activate", 
-            "Value", std::variant<uint32_t>(*imageId));           
+            "Value", imageId);           
         }
          
-    };*/
+    };
     
 }
 
