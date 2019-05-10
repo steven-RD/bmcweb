@@ -253,7 +253,7 @@ namespace redfish {
             crow::connections::systemBus->async_method_call(
             [asyncResp](
                     const boost::system::error_code ec,
-                    const std::vector<std::pair<std::string,std::string>& 
+                    const std::vector<std::pair<std::string,std::string>>& 
                     propertiesList) {
                     if (ec) {
                         messages::internalError(asyncResp->res);
