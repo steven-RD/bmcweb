@@ -55,8 +55,8 @@ namespace redfish {
             nodes.emplace_back(std::make_unique<FirmwareService>(app));
             nodes.emplace_back(std::make_unique<Functionl>(app));
             nodes.emplace_back(std::make_unique<Ready>(app));
-            //nodes.emplace_back(std::make_unique<Update>(app));
-            //nodes.emplace_back(std::make_unique<Activate>(app));
+            nodes.emplace_back(std::make_unique<Update>(app));
+            nodes.emplace_back(std::make_unique<Activate>(app));
             
             nodes.emplace_back(std::make_unique<AccountService>(app));
             nodes.emplace_back(std::make_unique<AccountsCollection>(app));
