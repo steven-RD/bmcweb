@@ -137,7 +137,7 @@ namespace redfish {
             "com.usi.Ssdarray.Firmware", 
             "/xyz/openbmc_project/ssdarray/firmware/functional",
             "org.freedesktop.DBus.Properties", "GetAll",
-            "xyz.openbmc_project.Ssdarray.Functional");
+            "com.usi.Ssdarray.Functional");
         }
         
     };
@@ -210,7 +210,7 @@ namespace redfish {
             "com.usi.Ssdarray.Firmware", 
             "/xyz/openbmc_project/ssdarray/firmware/ready",
             "org.freedesktop.DBus.Properties", "GetAll",
-            "xyz.openbmc_project.Ssdarray.Ready");
+            "com.usi.Ssdarray.Ready");
         }
     
     };
@@ -283,7 +283,7 @@ namespace redfish {
             "com.usi.Ssdarray.Firmware", 
             "/xyz/openbmc_project/ssdarray/firmware/update",
             "org.freedesktop.DBus.Properties", "GetAll",
-            "xyz.openbmc_project.Ssdarray.Update");
+            "com.usi.Ssdarray.Update");
         }
         
         void doPatch(crow::Response& res, const crow::Request& req,
@@ -329,8 +329,7 @@ namespace redfish {
             "com.usi.Ssdarray.Firmware", 
             "/xyz/openbmc_project/ssdarray/firmware/update",
             "org.freedesktop.DBus.Properties", "Set",
-            "xyz.openbmc_project.Switch.Firmware.Update", 
-            "Value", imageId);   ///std::variant<uint32_t>(*imageId)        
+            "com.usi.Ssdarray.Update", "Value", imageId);   ///std::variant<uint32_t>(*imageId)        
         }
         
     };
@@ -397,7 +396,7 @@ namespace redfish {
             "com.usi.Ssdarray.Firmware", 
             "/xyz/openbmc_project/ssdarray/firmware/activate",
             "org.freedesktop.DBus.Properties", "GetAll",
-            "xyz.openbmc_project.Ssdarray.Activate");
+            "com.usi.Ssdarray.Activate");
         }
         
         void doPatch(crow::Response& res, const crow::Request& req,
@@ -444,8 +443,7 @@ namespace redfish {
             "com.usi.Ssdarray.Firmware", 
             "/xyz/openbmc_project/ssdarray/firmware/activate",
             "org.freedesktop.DBus.Properties", "Set",
-            "xyz.openbmc_project.Ssdarray.Firmware.Activate", 
-            "Value", imageId);           
+            "com.usi.Ssdarray.Activate", "Value", imageId);           
         }
          
     };
