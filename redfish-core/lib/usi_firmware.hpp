@@ -134,7 +134,7 @@ namespace redfish {
                         }
                     }
                 },
-            "xyz.openbmc_project.Ssdarray.Firmware", 
+            "com.usi.Ssdarray.Firmware", 
             "/xyz/openbmc_project/ssdarray/firmware/functional",
             "org.freedesktop.DBus.Properties", "GetAll",
             "xyz.openbmc_project.Ssdarray.Functional");
@@ -207,7 +207,7 @@ namespace redfish {
                         }
                     }
                 },
-            "xyz.openbmc_project.Ssdarray.Firmware", 
+            "com.usi.Ssdarray.Firmware", 
             "/xyz/openbmc_project/ssdarray/firmware/ready",
             "org.freedesktop.DBus.Properties", "GetAll",
             "xyz.openbmc_project.Ssdarray.Ready");
@@ -280,7 +280,7 @@ namespace redfish {
                         }
                     }
                 },
-            "xyz.openbmc_project.Ssdarray.Firmware", 
+            "com.usi.Ssdarray.Firmware", 
             "/xyz/openbmc_project/ssdarray/firmware/update",
             "org.freedesktop.DBus.Properties", "GetAll",
             "xyz.openbmc_project.Ssdarray.Update");
@@ -326,7 +326,7 @@ namespace redfish {
                     }
                 }
             },
-            "xyz.openbmc_project.Ssdarray.Firmware", 
+            "com.usi.Ssdarray.Firmware", 
             "/xyz/openbmc_project/ssdarray/firmware/update",
             "org.freedesktop.DBus.Properties", "Set",
             "xyz.openbmc_project.Switch.Firmware.Update", 
@@ -394,7 +394,7 @@ namespace redfish {
                         }
                     }
                 },
-            "xyz.openbmc_project.Ssdarray.Firmware", 
+            "com.usi.Ssdarray.Firmware", 
             "/xyz/openbmc_project/ssdarray/firmware/activate",
             "org.freedesktop.DBus.Properties", "GetAll",
             "xyz.openbmc_project.Ssdarray.Activate");
@@ -441,7 +441,7 @@ namespace redfish {
                     }
                 }
             },
-            "xyz.openbmc_project.Ssdarray.Firmware", 
+            "com.usi.Ssdarray.Firmware", 
             "/xyz/openbmc_project/ssdarray/firmware/activate",
             "org.freedesktop.DBus.Properties", "Set",
             "xyz.openbmc_project.Ssdarray.Firmware.Activate", 
