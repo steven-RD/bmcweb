@@ -75,10 +75,10 @@ namespace redfish {
             
     };
     
-    class Functionl : public Node {
+    class Functional : public Node {
     public:
         
-        Functionl(CrowApp& app) : Node(app, "/redfish/v1/Switch/FirmwareService/Functionl/") {
+        Functional(CrowApp& app) : Node(app, "/redfish/v1/Switch/FirmwareService/Functional/") {
             entityPrivileges = {
                 {boost::beast::http::verb::get,{
                         {"ConfigureUsers"},
@@ -103,11 +103,11 @@ namespace redfish {
             
             auto asyncResp = std::make_shared<AsyncResp>(res);
             res.jsonValue = {
-                {"@odata.context", "/redfish/v1/$metadata#USI.Switch.FirmwareService.Functionl"},
-                {"@odata.id", "/redfish/v1/Switch/FirmwareService/Functionl"},
-                {"@odata.type", "#Functionl.v1_1_0.Functionl"},
-                {"Name", "Functionl Information"},
-                {"Description", "Functionl Information"}
+                {"@odata.context", "/redfish/v1/$metadata#USI.Switch.FirmwareService.Functional"},
+                {"@odata.id", "/redfish/v1/Switch/FirmwareService/Functional"},
+                {"@odata.type", "#Functional.v1_1_0.Functional"},
+                {"Name", "Functional Information"},
+                {"Description", "Functional Information"}
             };
             
             crow::connections::systemBus->async_method_call(
@@ -120,7 +120,7 @@ namespace redfish {
                         return;
                     }
                     BMCWEB_LOG_DEBUG << "Got " << propertiesList.size()
-                            << "properties for FirmwareService Functionl";
+                            << "properties for FirmwareService Functional";
 
                     for(const std::pair<std::string, std::vector<std::string>>& 
                             property : propertiesList) {

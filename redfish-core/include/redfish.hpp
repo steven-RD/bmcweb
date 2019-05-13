@@ -53,7 +53,7 @@ namespace redfish {
              * Add USI redfish class modules
              */
             nodes.emplace_back(std::make_unique<FirmwareService>(app));
-            nodes.emplace_back(std::make_unique<Functionl>(app));
+            nodes.emplace_back(std::make_unique<Functional>(app));
             nodes.emplace_back(std::make_unique<Ready>(app));
             nodes.emplace_back(std::make_unique<Update>(app));
             nodes.emplace_back(std::make_unique<Activate>(app));
