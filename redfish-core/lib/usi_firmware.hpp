@@ -131,16 +131,21 @@ namespace redfish {
                     }
                     BMCWEB_LOG_DEBUG << "Got " << propertiesList.size()
                             << "properties for FirmwareService Functional";
-
+                    asyncResp->res.jsonValue["propertiesList.size1"] = propertiesList.size();
+                    
                     for(const std::pair<std::string, std::variant<std::vector<std::string>>>& 
                             property : propertiesList) {
+                        asyncResp->res.jsonValue["propertiesList.size2"] = propertiesList.size();
                         if(property.first == "Version") {
                             const std::vector<std::string> *value = 
-                                    //std::get_if<std::string>(&property.second);
                                     std::get_if<std::vector<std::string>>(&property.second);
                             if(!value){
-                                asyncResp->res.jsonValue["ConfigurationFileVersion"] = (*value)[0];
-                                asyncResp->res.jsonValue["FirmwareVersion"] = (*value)[1];
+                                for(std::vector<std::string>::iterator it = value->begin(); it != value->end(); it++){
+                                    asyncResp->res.jsonValue["Version"]["ConfigurationFileVersion"] = *it;
+                                    asyncResp->res.jsonValue["Version"]["FirmwareVersion"] = *it;
+                                }
+                                //asyncResp->res.jsonValue["Version"]["ConfigurationFileVersion"] = (*value)[0];
+                                //asyncResp->res.jsonValue["Version"]["FirmwareVersion"] = (*value)[1];
 //                                asyncResp->res.jsonValue["Status"] = *value;
                             }
                         }
@@ -200,8 +205,6 @@ namespace redfish {
                     }
                     BMCWEB_LOG_DEBUG << "Got " << propertiesList.size()
                             << "properties for FirmwareService Ready";
-                    
-                    //asyncResp->res.jsonValue["propertiesList.size"] = propertiesList.size();
                     
                     for(const std::pair<std::string, std::variant<std::string>>& 
                             property : propertiesList) {
@@ -279,14 +282,14 @@ namespace redfish {
                     for(const std::pair<std::string, std::variant<std::string>>& 
                             property : propertiesList) {
                         if(property.first == "Status") {
-                            const std::string* value = //(&property.second);
+                            const std::string* value = 
                                    std::get_if<std::string>(&property.second);
                             if(value != nullptr){
                                 asyncResp->res.jsonValue["Status"] = *value;
                             }
                         }
                         if(property.first == "Imageid") {
-                            const std::string* value = //(&property.second);
+                            const std::string* value = 
                                     std::get_if<std::string>(&property.second);
                             if(value != nullptr){
                                 asyncResp->res.jsonValue["Imageid"] = *value;
@@ -323,7 +326,7 @@ namespace redfish {
                     [this, asyncResp, imageId](
                     const boost::system::error_code ec, 
                     const std::vector<std::pair<std::string, 
-                    std::variant<uint32_t>>>& propertiesList) {
+                        std::variant<uint32_t>>>& propertiesList) {
                 if (ec) {
                     BMCWEB_LOG_ERROR << "D-Bus responses error: " << ec;
                     messages::internalError(asyncResp->res);
@@ -397,17 +400,7 @@ namespace redfish {
                     const std::string* value = std::get_if<std::string>(&property);
                     if(value != nullptr){
                         asyncResp->res.jsonValue["Status"] = *value;
-                    }
-                    /*for(const std::pair<std::string, std::string>& 
-                            property : propertiesList) {
-                        if(property.first == "Status") {
-                            const std::string* value = //(&property.second);
-                                    std::get_if<std::string>(&property.second);
-                            if(value != nullptr){
-                                asyncResp->res.jsonValue["Status"] = *value;
-                            }
-                        }
-                    }*/
+                    }                   
                 },
             "com.usi.Ssdarray.Firmware", 
             "/xyz/openbmc_project/ssdarray/firmware/activate",
