@@ -52,7 +52,7 @@ namespace redfish {
                 const std::vector<std::string>& params) override {
             
             auto asyncResp = std::make_shared<AsyncResp>(res);
-            res.jsonValue = {
+            /*res.jsonValue = {
                 {"@odata.context", "/redfish/v1/$metadata#USI.Switch.FirmwareService"},
                 {"@odata.id", "/redfish/v1/Switch/FirmwareService"},
                 {"@odata.type", "#FirmwareService.v1_1_0.FirmwareService"},
@@ -70,7 +70,17 @@ namespace redfish {
                         {"@odata.id", "/redfish/v1/Switch/FirmwareService/Update"}
                     }
                 }
-            };
+            };*/
+            asyncResp->res.jsonValue["@odata.context"] = "/redfish/v1/$metadata#USI.Switch.FirmwareService";
+            asyncResp->res.jsonValue["@odata.id"] = "/redfish/v1/Switch/FirmwareService";
+            asyncResp->res.jsonValue["@odata.type"] = "#FirmwareService.v1_1_0.FirmwareService";
+            asyncResp->res.jsonValue["Id"] = "Firmware";
+            asyncResp->res.jsonValue["Name"] = "FirmwareService Information";
+            asyncResp->res.jsonValue["Description"] = "FirmwareService Information";
+            asyncResp->res.jsonValue["Firmware"]["@odata.id"] = "/redfish/v1/Switch/FirmwareService/Activate";
+            asyncResp->res.jsonValue["Firmware"]["@odata.id"] = "/redfish/v1/Switch/FirmwareService/Functional";
+            asyncResp->res.jsonValue["Firmware"]["@odata.id"] = "/redfish/v1/Switch/FirmwareService/Ready";
+            asyncResp->res.jsonValue["Firmware"]["@odata.id"] = "/redfish/v1/Switch/FirmwareService/Update";
         }
             
     };
@@ -188,8 +198,10 @@ namespace redfish {
                     }
                     BMCWEB_LOG_DEBUG << "Got " << propertiesList.size()
                             << "properties for FirmwareService Ready";
-
-                    for(const std::pair<std::string, std::string>& 
+                    
+                    asyncResp->res.jsonValue["propertiesList.size"] = propertiesList.size();
+                    
+                    /*for(const std::pair<std::string, std::string>& 
                             property : propertiesList) {
                         if(property.first == "Type") {
                             const std::string* value = (&property.second);
@@ -205,7 +217,7 @@ namespace redfish {
                                 asyncResp->res.jsonValue["Version"] = *value;
                             }
                         }
-                    }
+                    }*/
                 },
             "com.usi.Ssdarray.Firmware", 
             "/xyz/openbmc_project/ssdarray/firmware/ready",
