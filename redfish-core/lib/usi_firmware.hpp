@@ -139,13 +139,13 @@ namespace redfish {
                         if(property.first == "Version") {
                             const std::vector<std::string> *value = 
                                     std::get_if<std::vector<std::string>>(&property.second);
-                            if(!value){
-                                for(std::vector<std::string>::iterator it = value->begin(); it != value->end(); it++){
-                                    asyncResp->res.jsonValue["Version"]["ConfigurationFileVersion"] = *it;
-                                    asyncResp->res.jsonValue["Version"]["FirmwareVersion"] = *it;
-                                }
-                                //asyncResp->res.jsonValue["Version"]["ConfigurationFileVersion"] = (*value)[0];
-                                //asyncResp->res.jsonValue["Version"]["FirmwareVersion"] = (*value)[1];
+                            //if(!value){
+                               // for(std::vector<std::string>::iterator it = value->begin(); it != value->end(); it++){
+                                   // asyncResp->res.jsonValue["Version"]["ConfigurationFileVersion"] = *it;
+                                   // asyncResp->res.jsonValue["Version"]["FirmwareVersion"] = *it;
+                               // }
+                                asyncResp->res.jsonValue["Version"]["ConfigurationFileVersion"] = (*value)[0];
+                                asyncResp->res.jsonValue["Version"]["FirmwareVersion"] = (*value)[1];
 //                                asyncResp->res.jsonValue["Status"] = *value;
                             }
                         }
