@@ -147,7 +147,7 @@ namespace redfish {
                                 asyncResp->res.jsonValue["Version"]["ConfigurationFileVersion"] = (*value)[0];
                                 asyncResp->res.jsonValue["Version"]["FirmwareVersion"] = (*value)[1];
 //                                asyncResp->res.jsonValue["Status"] = *value;
-                            }
+                            //}
                         }
                     }
                 },
