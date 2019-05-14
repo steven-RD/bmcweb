@@ -438,18 +438,18 @@ namespace redfish {
                     [this, asyncResp, imageId](
                     const boost::system::error_code ec, 
                     const std::vector<std::pair<std::string, 
-                    std::variant<uint32_t>>>& property) {
+                          std::variant<uint32_t>>>& property) {
                 if (ec) {
                     BMCWEB_LOG_ERROR << "D-Bus responses error: " << ec;
                     messages::internalError(asyncResp->res);
                     return;
                 }
                 /*set value and function will return value*/
-                const std::uint32_t* value = std::get_if<std::uint32_t>(&property.second);
+                /*const std::uint32_t* value = std::get_if<std::uint32_t>(&property.second);
                 if(value != nullptr){
                     asyncResp->res.jsonValue["Value"] = *value;
                 }
-                /*for(const std::pair<std::string, std::variant<uint32_t>>& 
+                for(const std::pair<std::string, std::variant<uint32_t>>& 
                         property : property) {
                     if(property.first == "Value") {
                         const uint32_t* value = //(&property.second);
