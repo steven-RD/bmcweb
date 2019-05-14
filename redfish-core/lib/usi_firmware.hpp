@@ -445,7 +445,7 @@ namespace redfish {
                     return;
                 }
                 /*set value and function will return value*/
-                 const std::string* value = std::get_if<std::string>(&property.second);
+                const std::uint32_t* value = std::get_if<std::uint32_t>(&property.second);
                 if(value != nullptr){
                     asyncResp->res.jsonValue["Value"] = *value;
                 }
