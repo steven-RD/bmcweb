@@ -138,9 +138,9 @@ namespace redfish {
                             const std::vector<std::string> *value = 
                                     //std::get_if<std::string>(&property.second);
                                     std::get_if<std::vector<std::string>>(&property.second);
-                            if(!value.empty()){
-                                asyncResp->res.jsonValue["ConfigurationFileVersion"] = value[0];
-                                asyncResp->res.jsonValue["FirmwareVersion"] = value[1];
+                            if(!value){
+                                asyncResp->res.jsonValue["ConfigurationFileVersion"] = (*value)[0];
+                                asyncResp->res.jsonValue["FirmwareVersion"] = (*value)[1];
 //                                asyncResp->res.jsonValue["Status"] = *value;
                             }
                         }
@@ -445,7 +445,7 @@ namespace redfish {
                     return;
                 }
                 /*set value and function will return value*/
-                 const std::string* value = std::get_if<std::string>(&property);
+                 const std::string* value = std::get_if<std::string>(&property.second);
                 if(value != nullptr){
                     asyncResp->res.jsonValue["Value"] = *value;
                 }
