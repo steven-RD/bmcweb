@@ -135,7 +135,7 @@ namespace redfish {
                     for(const std::pair<std::string, std::variant<std::vector<std::string>>>& 
                             property : propertiesList) {
                         if(property.first == "Version") {
-                            const std::vector<std::string> value = 
+                            const std::vector<std::string> *value = 
                                     //std::get_if<std::string>(&property.second);
                                     std::get_if<std::vector<std::string>>(&property.second);
                             if(!value.empty()){
@@ -287,7 +287,7 @@ namespace redfish {
                         }
                         if(property.first == "Imageid") {
                             const std::string* value = //(&property.second);
-                                    std::get_if<uint32_t>(&property.second);
+                                    std::get_if<std::string>(&property.second);
                             if(value != nullptr){
                                 asyncResp->res.jsonValue["Imageid"] = *value;
                             }
@@ -333,7 +333,7 @@ namespace redfish {
                         property : propertiesList) {
                     if(property.first == "Value") {
                         const uint32_t* value = //(&property.second);
-                                std::get_if<std::string>(&property.second);
+                                std::get_if<uint32_t>(&property.second);
                         if(value != nullptr){
                             asyncResp->res.jsonValue["Value"] = *value;
                         }
