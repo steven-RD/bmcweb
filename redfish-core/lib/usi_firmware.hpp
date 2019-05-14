@@ -123,8 +123,8 @@ namespace redfish {
             crow::connections::systemBus->async_method_call(
             [asyncResp](
                     const boost::system::error_code ec,
-                    const std::vector<std::pair<
-                    std::string, std::vector<std::string>>>& propertiesList) {
+                    const std::vector<std::pair<std::string, 
+                    std::variant<std::vector<std::string>>>>& propertiesList) {
                     if (ec) {
                         messages::internalError(asyncResp->res);
                         return;
@@ -132,10 +132,12 @@ namespace redfish {
                     BMCWEB_LOG_DEBUG << "Got " << propertiesList.size()
                             << "properties for FirmwareService Functional";
 
-                    for(const std::pair<std::string, std::vector<std::string>>& 
+                    for(const std::pair<std::string, std::variant<std::vector<std::string>>>& 
                             property : propertiesList) {
                         if(property.first == "Version") {
-                            const std::vector<std::string> value(property.second);
+                            const std::vector<std::string> value = 
+                                    //std::get_if<std::string>(&property.second);
+                                    std::get_if<std::vector<std::string>>(&property.second);
                             if(!value.empty()){
                                 asyncResp->res.jsonValue["ConfigurationFileVersion"] = value[0];
                                 asyncResp->res.jsonValue["FirmwareVersion"] = value[1];
@@ -199,7 +201,7 @@ namespace redfish {
                     BMCWEB_LOG_DEBUG << "Got " << propertiesList.size()
                             << "properties for FirmwareService Ready";
                     
-                    asyncResp->res.jsonValue["propertiesList.size"] = propertiesList.size();
+                    //asyncResp->res.jsonValue["propertiesList.size"] = propertiesList.size();
                     
                     for(const std::pair<std::string, std::variant<std::string>>& 
                             property : propertiesList) {
@@ -265,8 +267,8 @@ namespace redfish {
             crow::connections::systemBus->async_method_call(
             [asyncResp](
                     const boost::system::error_code ec,
-                    const std::vector<std::pair<std::string,std::string>>& 
-                    propertiesList) {
+                    const std::vector<std::pair<std::string,
+                    std::variant<std::string>>>& propertiesList) {
                     if (ec) {
                         messages::internalError(asyncResp->res);
                         return;
@@ -274,28 +276,28 @@ namespace redfish {
                     BMCWEB_LOG_DEBUG << "Got " << propertiesList.size()
                             << "properties for FirmwareService Update";
 
-                    for(const std::pair<std::string, std::string>& 
+                    for(const std::pair<std::string, std::variant<std::string>>& 
                             property : propertiesList) {
                         if(property.first == "Status") {
-                            const std::string* value = (&property.second);
-                                   //std::get_if<std::string>(&property.second);
+                            const std::string* value = //(&property.second);
+                                   std::get_if<std::string>(&property.second);
                             if(value != nullptr){
                                 asyncResp->res.jsonValue["Status"] = *value;
                             }
                         }
                         if(property.first == "Imageid") {
-                            const std::string* value = (&property.second);
-                                    //std::get_if<uint32_t>(&property.second);
+                            const std::string* value = //(&property.second);
+                                    std::get_if<uint32_t>(&property.second);
                             if(value != nullptr){
                                 asyncResp->res.jsonValue["Imageid"] = *value;
                             }
                         }
                     }
                 },
-            "xyz.openbmc_project.firmware", //"com.usi.Ssdarray.Firmware", 
+            "com.usi.Ssdarray.Firmware", 
             "/xyz/openbmc_project/ssdarray/firmware/update",
             "org.freedesktop.DBus.Properties", "GetAll",
-            "xyz.openbmc_project.Ssdarray.Update"); //"com.usi.Ssdarray.Update"
+            "com.usi.Ssdarray.Update");
         }
         
         void doPatch(crow::Response& res, const crow::Request& req,
@@ -320,18 +322,18 @@ namespace redfish {
             crow::connections::systemBus->async_method_call(
                     [this, asyncResp, imageId](
                     const boost::system::error_code ec, 
-                    const std::vector<std::pair<std::string, uint32_t>>&
-                    propertiesList) {
+                    const std::vector<std::pair<std::string, 
+                    std::variant<uint32_t>>>& propertiesList) {
                 if (ec) {
                     BMCWEB_LOG_ERROR << "D-Bus responses error: " << ec;
                     messages::internalError(asyncResp->res);
                     return;
                 }
-                for(const std::pair<std::string, uint32_t>&  
+                for(const std::pair<std::string, std::variant<uint32_t>>&  
                         property : propertiesList) {
                     if(property.first == "Value") {
-                        const uint32_t* value = (&property.second);
-                                //std::get_if<std::string>(&property.second);
+                        const uint32_t* value = //(&property.second);
+                                std::get_if<std::string>(&property.second);
                         if(value != nullptr){
                             asyncResp->res.jsonValue["Value"] = *value;
                         }
@@ -385,30 +387,32 @@ namespace redfish {
             crow::connections::systemBus->async_method_call(
             [asyncResp](
                     const boost::system::error_code ec,
-                    const std::vector<std::pair<std::string, std::string>>&
-                    propertiesList) {
+                   const std::variant<std::string>& property) {
                     if (ec) {
                         messages::internalError(asyncResp->res);
                         return;
                     }
-                    BMCWEB_LOG_DEBUG << "Got " << propertiesList.size()
+                    BMCWEB_LOG_DEBUG << "Got "
                             << "properties for FirmwareService Activate";
-
-                    for(const std::pair<std::string, std::string>& 
+                    const std::string* value = std::get_if<std::string>(&property);
+                    if(value != nullptr){
+                        asyncResp->res.jsonValue["Status"] = *value;
+                    }
+                    /*for(const std::pair<std::string, std::string>& 
                             property : propertiesList) {
                         if(property.first == "Status") {
-                            const std::string* value = (&property.second);
-                                    //std::get_if<std::string>(&property.second);
+                            const std::string* value = //(&property.second);
+                                    std::get_if<std::string>(&property.second);
                             if(value != nullptr){
                                 asyncResp->res.jsonValue["Status"] = *value;
                             }
                         }
-                    }
+                    }*/
                 },
             "com.usi.Ssdarray.Firmware", 
             "/xyz/openbmc_project/ssdarray/firmware/activate",
-            "org.freedesktop.DBus.Properties", "GetAll",
-            "com.usi.Ssdarray.Activate");
+            "org.freedesktop.DBus.Properties", "Get",
+            "com.usi.Ssdarray.Activate", "Status");
         }
         
         void doPatch(crow::Response& res, const crow::Request& req,
@@ -433,29 +437,33 @@ namespace redfish {
             crow::connections::systemBus->async_method_call(
                     [this, asyncResp, imageId](
                     const boost::system::error_code ec, 
-                    const std::vector<std::pair<std::string, uint32_t>>&
-                    propertiesList) {
+                    const std::vector<std::pair<std::string, 
+                    std::variant<uint32_t>>>& property) {
                 if (ec) {
                     BMCWEB_LOG_ERROR << "D-Bus responses error: " << ec;
                     messages::internalError(asyncResp->res);
                     return;
                 }
                 /*set value and function will return value*/
-                for(const std::pair<std::string, uint32_t>& 
-                        property : propertiesList) {
+                 const std::string* value = std::get_if<std::string>(&property);
+                if(value != nullptr){
+                    asyncResp->res.jsonValue["Value"] = *value;
+                }
+                /*for(const std::pair<std::string, std::variant<uint32_t>>& 
+                        property : property) {
                     if(property.first == "Value") {
-                        const uint32_t* value = (&property.second);
-                                //std::get_if<uint32_t>(&property.second);
+                        const uint32_t* value = //(&property.second);
+                                std::get_if<uint32_t>(&property.second);
                         if(value != nullptr){
                             asyncResp->res.jsonValue["Value"] = *value;
                         }
                     }
-                }
+                }*/
             },
             "com.usi.Ssdarray.Firmware", 
             "/xyz/openbmc_project/ssdarray/firmware/activate",
             "org.freedesktop.DBus.Properties", "Set",
-            "com.usi.Ssdarray.Activate", "Value", imageId);           
+            "com.usi.Ssdarray.Activate", "Value", std::variant<uint32_t>(imageId));           
         }
          
     };
