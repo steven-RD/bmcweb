@@ -77,10 +77,10 @@ namespace redfish {
             asyncResp->res.jsonValue["Id"] = "Firmware";
             asyncResp->res.jsonValue["Name"] = "FirmwareService Information";
             asyncResp->res.jsonValue["Description"] = "FirmwareService Information";
-            asyncResp->res.jsonValue["Firmware"]["@odata.id"] = "/redfish/v1/Switch/FirmwareService/Activate";
-            asyncResp->res.jsonValue["Firmware"]["@odata.id"] = "/redfish/v1/Switch/FirmwareService/Functional";
-            asyncResp->res.jsonValue["Firmware"]["@odata.id"] = "/redfish/v1/Switch/FirmwareService/Ready";
-            asyncResp->res.jsonValue["Firmware"]["@odata.id"] = "/redfish/v1/Switch/FirmwareService/Update";
+            asyncResp->res.jsonValue["Firmware"]["@odata.id1"] = "/redfish/v1/Switch/FirmwareService/Activate";
+            asyncResp->res.jsonValue["Firmware"]["@odata.id2"] = "/redfish/v1/Switch/FirmwareService/Functional";
+            asyncResp->res.jsonValue["Firmware"]["@odata.id3"] = "/redfish/v1/Switch/FirmwareService/Ready";
+            asyncResp->res.jsonValue["Firmware"]["@odata.id4"] = "/redfish/v1/Switch/FirmwareService/Update";
         }
             
     };
@@ -190,8 +190,8 @@ namespace redfish {
             crow::connections::systemBus->async_method_call(
             [asyncResp](
                     const boost::system::error_code ec,
-                    const std::vector<std::pair<std::string, std::string>>&
-                    propertiesList) {
+                    const std::vector<std::pair<std::string, 
+                    std::variant<std::string>>>& propertiesList) {
                     if (ec) {
                         messages::internalError(asyncResp->res);
                         return;
@@ -201,23 +201,23 @@ namespace redfish {
                     
                     asyncResp->res.jsonValue["propertiesList.size"] = propertiesList.size();
                     
-                    /*for(const std::pair<std::string, std::string>& 
+                    for(const std::pair<std::string, std::variant<std::string>>& 
                             property : propertiesList) {
                         if(property.first == "Type") {
-                            const std::string* value = (&property.second);
-                                    //std::get_if<std::string>(&property.second);
+                            const std::string* value = //(&property.second);
+                                    std::get_if<std::string>(&property.second);
                             if(value != nullptr){
                                 asyncResp->res.jsonValue["Type"] = *value;
                             }
                         }
                         if(property.first == "Version") {
-                            const std::string* value = (&property.second);
-                                    //std::get_if<std::string>(&property.second);
+                            const std::string* value = //(&property.second);
+                                    std::get_if<std::string>(&property.second);
                             if(value != nullptr) {
                                 asyncResp->res.jsonValue["Version"] = *value;
                             }
                         }
-                    }*/
+                    }
                 },
             "com.usi.Ssdarray.Firmware", 
             "/xyz/openbmc_project/ssdarray/firmware/ready",
@@ -292,10 +292,10 @@ namespace redfish {
                         }
                     }
                 },
-            "com.usi.Ssdarray.Firmware", 
+            "xyz.openbmc_project.firmware", //"com.usi.Ssdarray.Firmware", 
             "/xyz/openbmc_project/ssdarray/firmware/update",
             "org.freedesktop.DBus.Properties", "GetAll",
-            "com.usi.Ssdarray.Update");
+            "xyz.openbmc_project.Ssdarray.Update"); //"com.usi.Ssdarray.Update"
         }
         
         void doPatch(crow::Response& res, const crow::Request& req,
