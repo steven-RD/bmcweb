@@ -123,7 +123,7 @@ namespace redfish {
             crow::connections::systemBus->async_method_call(
                     [asyncResp](
                     const boost::system::error_code ec,
-                    const std::variant<std::vector<std::string>>& property) {
+                    std::variant<std::vector<std::string>>& property) {
                         if (ec) {
                             messages::internalError(asyncResp->res);
                             return;
@@ -139,7 +139,6 @@ namespace redfish {
                             asyncResp->res.jsonValue["propertiesList.size2"] = 456;
                             asyncResp->res.jsonValue["Version"]["ConfigurationFileVersion"] = (*value)[0];
                             asyncResp->res.jsonValue["Version"]["FirmwareVersion"] = (*value)[1];
-                            //asyncResp->res.jsonValue["Status"] = *value;
                          }
                     },
             "com.usi.Ssdarray.Firmware",
