@@ -123,7 +123,7 @@ namespace redfish {
             crow::connections::systemBus->async_method_call(
                     [asyncResp](
                     const boost::system::error_code ec,
-                    std::variant<std::vector<std::string>>& property) {
+                    const std::vector<std::string>& property) {
                         if (ec) {
                             messages::internalError(asyncResp->res);
                             return;
@@ -132,16 +132,13 @@ namespace redfish {
                                 << "properties for FirmwareService Functional";
                         asyncResp->res.jsonValue["propertiesList.size1"] = 123;
 
-                        const std::vector<std::string> *value =
-                                std::get_if<std::vector<std::string>>(&property);
-                        if(!value){
-                            // for(std::vector<std::string>::iterator it = value->begin(); it != value->end(); it++){
-                            // asyncResp->res.jsonValue["Version"]["ConfigurationFileVersion"] = *it;
-                            // asyncResp->res.jsonValue["Version"]["FirmwareVersion"] = *it;
+                        const std::vector<std::string> value = property;
+                                //std::get_if<std::vector<std::string>>(&property);
+                        asyncResp->res.jsonValue["value"] = value.size();
+                        if(!value.empty()){
                             asyncResp->res.jsonValue["propertiesList.size2"] = 456;
-                            asyncResp->res.jsonValue["Version"]["ConfigurationFileVersion"] = (*value)[0];
-                            asyncResp->res.jsonValue["Version"]["FirmwareVersion"] = (*value)[1];
-                            //asyncResp->res.jsonValue["Status"] = *value;
+                            asyncResp->res.jsonValue["Version"]["ConfigurationFileVersion"] = value[0];
+                            asyncResp->res.jsonValue["Version"]["FirmwareVersion"] = value[1];
                          }
                     },
             "com.usi.Ssdarray.Firmware",
@@ -202,7 +199,7 @@ namespace redfish {
                         for (const std::pair<std::string, std::variant < std::string>>&
                                 property : propertiesList) {
                             if (property.first == "Type") {
-                                const std::string* value = //(&property.second);
+                                const std::string* value =
                                         std::get_if<std::string>(&property.second);
                                 if (value != nullptr) {
                                     asyncResp->res.jsonValue["Type"] = *value;
