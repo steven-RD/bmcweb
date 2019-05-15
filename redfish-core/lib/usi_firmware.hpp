@@ -123,7 +123,7 @@ namespace redfish {
             crow::connections::systemBus->async_method_call(
                     [asyncResp](
                     const boost::system::error_code ec,
-                    std::variant<std::vector<std::string>>& property) {
+                    const std::variant<std::vector<std::string>>& property) {
                         if (ec) {
                             messages::internalError(asyncResp->res);
                             return;
@@ -131,10 +131,10 @@ namespace redfish {
                         BMCWEB_LOG_DEBUG << "Got "
                                 << "properties for FirmwareService Functional";
                         asyncResp->res.jsonValue["propertiesList.size1"] = 123;
-
+                        
                         const std::vector<std::string> *value =
                                 std::get_if<std::vector<std::string>>(&property);
-                        asyncResp->res.jsonValue["Version"]["ConfigurationFileVersion"] = (*value)[0];
+                        //asyncResp->res.jsonValue["Version"]["property"] = (*value)[0];
                         if(value != nullptr){
                             asyncResp->res.jsonValue["propertiesList.size2"] = 456;
                             asyncResp->res.jsonValue["Version"]["ConfigurationFileVersion"] = (*value)[0];
@@ -206,7 +206,7 @@ namespace redfish {
                                 }
                             }
                             if (property.first == "Version") {
-                                const std::string* value = //(&property.second);
+                                const std::string* value =
                                         std::get_if<std::string>(&property.second);
                                 if (value != nullptr) {
                                     asyncResp->res.jsonValue["Version"] = *value;
