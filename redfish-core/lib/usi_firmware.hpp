@@ -303,7 +303,7 @@ namespace redfish {
     class UpdateImage : public Node {   
     public:
 
-        Update(CrowApp& app) : Node(app, "/redfish/v1/Switch/FirmwareService/UpdateImage/") {
+        UpdateImage(CrowApp& app) : Node(app, "/redfish/v1/Switch/FirmwareService/UpdateImage/") {
             entityPrivileges = {
                 {boost::beast::http::verb::get,{
                         {"ConfigureUsers"},
@@ -459,7 +459,7 @@ namespace redfish {
     class ActivateImage : public Node {
     public:
         
-        Activate(CrowApp& app) : Node(app, "/redfish/v1/Switch/FirmwareService/ActivateImage") {
+        ActivateImage(CrowApp& app) : Node(app, "/redfish/v1/Switch/FirmwareService/ActivateImage/") {
             entityPrivileges = {
                 {boost::beast::http::verb::get,{
                         {"ConfigureUsers"},
