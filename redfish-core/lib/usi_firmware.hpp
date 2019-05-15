@@ -123,7 +123,7 @@ namespace redfish {
             crow::connections::systemBus->async_method_call(
                     [asyncResp](
                     const boost::system::error_code ec,
-                    const std::vector<std::string>& property) {
+                    const std::variant<std::vector<std::string>>& property) {
                         if (ec) {
                             messages::internalError(asyncResp->res);
                             return;
@@ -132,13 +132,14 @@ namespace redfish {
                                 << "properties for FirmwareService Functional";
                         asyncResp->res.jsonValue["propertiesList.size1"] = 123;
 
-                        const std::vector<std::string> value = property;
-                                //std::get_if<std::vector<std::string>>(&property);
-                        asyncResp->res.jsonValue["value"] = value.size();
-                        if(!value.empty()){
+                        const std::vector<std::string> *value =
+                                std::get_if<std::vector<std::string>>(&property);
+                        asyncResp->res.jsonValue["Version"]["ConfigurationFileVersion"] = (*value)[0];
+                        if(value != nullptr){
                             asyncResp->res.jsonValue["propertiesList.size2"] = 456;
-                            asyncResp->res.jsonValue["Version"]["ConfigurationFileVersion"] = value[0];
-                            asyncResp->res.jsonValue["Version"]["FirmwareVersion"] = value[1];
+                            asyncResp->res.jsonValue["Version"]["ConfigurationFileVersion"] = (*value)[0];
+                            asyncResp->res.jsonValue["Version"]["FirmwareVersion"] = (*value)[1];
+                            //asyncResp->res.jsonValue["Status"] = *value;
                          }
                     },
             "com.usi.Ssdarray.Firmware",
