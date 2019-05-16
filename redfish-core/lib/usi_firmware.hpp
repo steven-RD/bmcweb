@@ -1,14 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
 /* 
  * File:   usi_firmware.hpp
- * Author: 075061
+ * Author: Steven
  *
- * Created on 2019年4月26日, 上午8:59
+ * Date: 20190516
  */
 
 #ifndef USI_FIRMWARE_HPP
@@ -50,27 +45,8 @@ namespace redfish {
 
         void doGet(crow::Response& res, const crow::Request& req,
                 const std::vector<std::string>& params) override {
-
             auto asyncResp = std::make_shared<AsyncResp>(res);
-            /*res.jsonValue = {
-                {"@odata.context", "/redfish/v1/$metadata#USI.Switch.FirmwareService"},
-                {"@odata.id", "/redfish/v1/Switch/FirmwareService"},
-                {"@odata.type", "#FirmwareService.v1_1_0.FirmwareService"},
-                {"Id", "Firmware"},
-                {"Name", "FirmwareService Information"},
-                {"Description", "FirmwareService Information"},   
-                {"Firmware",
-                    {
-                        {"@odata.id", "/redfish/v1/Switch/FirmwareService/Activate"}
-                    },{
-                        {"@odata.id", "/redfish/v1/Switch/FirmwareService/Functional"}
-                    },{
-                        {"@odata.id", "/redfish/v1/Switch/FirmwareService/Ready"}
-                    },{
-                        {"@odata.id", "/redfish/v1/Switch/FirmwareService/Update"}
-                    }
-                }
-            };*/
+            
             asyncResp->res.jsonValue["@odata.context"] = "/redfish/v1/$metadata#USI.Switch.FirmwareService";
             asyncResp->res.jsonValue["@odata.id"] = "/redfish/v1/Switch/FirmwareService";
             asyncResp->res.jsonValue["@odata.type"] = "#FirmwareService.v1_1_0.FirmwareService";
@@ -80,9 +56,7 @@ namespace redfish {
             asyncResp->res.jsonValue["Firmware"]["@odata.id1"] = "/redfish/v1/Switch/FirmwareService/Functional";
             asyncResp->res.jsonValue["Firmware"]["@odata.id2"] = "/redfish/v1/Switch/FirmwareService/Ready";
             asyncResp->res.jsonValue["Firmware"]["@odata.id3"] = "/redfish/v1/Switch/FirmwareService/Update";
-            asyncResp->res.jsonValue["Firmware"]["@odata.id4"] = "/redfish/v1/Switch/FirmwareService/UpdateImage";
-            asyncResp->res.jsonValue["Firmware"]["@odata.id5"] = "/redfish/v1/Switch/FirmwareService/Activate";
-            asyncResp->res.jsonValue["Firmware"]["@odata.id6"] = "/redfish/v1/Switch/FirmwareService/ActivateImage";
+            asyncResp->res.jsonValue["Firmware"]["@odata.id4"] = "/redfish/v1/Switch/FirmwareService/Activate";
         }
 
     };
@@ -309,7 +283,7 @@ namespace redfish {
             if (!json_util::readJson(req, res, "Value", value, "Imageid", imageId)) {
                 return;
             }
-            //if (value) {
+            if (value) {
                 crow::connections::systemBus->async_method_call(
                     [this, asyncResp, value](
                     const boost::system::error_code ec) {
@@ -323,7 +297,7 @@ namespace redfish {
                 "/xyz/openbmc_project/ssdarray/firmware/update",
                 "org.freedesktop.DBus.Properties", "Set",
                 "com.usi.Ssdarray.Update", "Value", std::variant<uint32_t>(*value)); 
-            //}
+            }
             if(imageId) {
                 crow::connections::systemBus->async_method_call(
                     [this, asyncResp, imageId](
@@ -344,124 +318,7 @@ namespace redfish {
 
     };
     
-    class UpdateImage : public Node {   
-    public:
-
-        UpdateImage(CrowApp& app) : Node(app, "/redfish/v1/Switch/FirmwareService/UpdateImage/") {
-            entityPrivileges = {
-                {boost::beast::http::verb::get,{
-                        {"ConfigureUsers"},
-                        {"ConfigureManager"}}},
-                {boost::beast::http::verb::head,{
-                        {"Login"}}},
-                {boost::beast::http::verb::patch,{
-                        {"ConfigureUsers"}}},
-                {boost::beast::http::verb::put,{
-                        {"ConfigureUsers"}}},
-                {boost::beast::http::verb::delete_,{
-                        {"ConfigureUsers"}}},
-                {boost::beast::http::verb::post,{
-                        {"ConfigureUsers"}}}
-            };
-        }
-
-    private:
-        
-        void doPatch(crow::Response& res, const crow::Request& req,
-                const std::vector<std::string>& params) override {
-            auto asyncResp = std::make_shared<AsyncResp>(res);
-            /*res.jsonValue = {
-                {"@odata.context", "/redfish/v1/$metadata#USI.Switch.FirmwareService.UpdateImage"},
-                {"@odata.id", "/redfish/v1/Switch/FirmwareService/UpdateImage"},
-                {"@odata.type", "#UpdateImage.v1_1_0.UpdateImage"},
-                {"Name", "Update ImageId"},
-                {"Description", "Put ImageId to Update"}
-            };*/
-            //            if (params.size() != 1) {
-            //                messages::internalError(asyncResp->res);
-            //                return;
-            //            }           
-            //            const uint32_t& imageId = params[0];
-            std::optional<std::string> imageId;
-            if (!json_util::readJson(req, res, "Imageid", imageId)) {
-                return;
-            }
-            if (imageId) {
-                crow::connections::systemBus->async_method_call(
-                    [this, asyncResp, imageId](
-                    const boost::system::error_code ec) {
-                        if (ec) {
-                            messages::internalError(asyncResp->res);
-                            return;
-                        }
-                        messages::success(asyncResp->res);
-                        asyncResp->res.jsonValue["status"] = "ok";
-                    },
-                "com.usi.Ssdarray.Firmware",
-                "/xyz/openbmc_project/ssdarray/firmware/update",
-                "org.freedesktop.DBus.Properties", "Set",
-                "com.usi.Ssdarray.Update", "Imageid", 
-                std::variant<std::string>(*imageId)); 
-            }
-        }
-    };
     
-    class UpdateValue : public Node {   
-    public:
-
-        UpdateValue(CrowApp& app) : Node(app, "/redfish/v1/Switch/FirmwareService/UpdateValue/") {
-            entityPrivileges = {
-                {boost::beast::http::verb::get,{
-                        {"ConfigureUsers"},
-                        {"ConfigureManager"}}},
-                {boost::beast::http::verb::head,{
-                        {"Login"}}},
-                {boost::beast::http::verb::patch,{
-                        {"ConfigureUsers"}}},
-                {boost::beast::http::verb::put,{
-                        {"ConfigureUsers"}}},
-                {boost::beast::http::verb::delete_,{
-                        {"ConfigureUsers"}}},
-                {boost::beast::http::verb::post,{
-                        {"ConfigureUsers"}}}
-            };
-        }
-
-    private:
-        
-        void doPatch(crow::Response& res, const crow::Request& req,
-                const std::vector<std::string>& params) override {
-            auto asyncResp = std::make_shared<AsyncResp>(res);
-            /*res.jsonValue = {
-                {"@odata.context", "/redfish/v1/$metadata#USI.Switch.FirmwareService.UpdateValue"},
-                {"@odata.id", "/redfish/v1/Switch/FirmwareService/UpdateValue"},
-                {"@odata.type", "#UpdateValue.v1_1_0.UpdateValue"},
-                {"Name", "Update Value"},
-                {"Description", "Put Value to Update"}
-            };*/
-            std::optional<uint32_t> value = 11;
-            //if (!json_util::readJson(req, res, "Value", value)) {
-            //    return;
-            //}
-            //if (value) {
-                crow::connections::systemBus->async_method_call(
-                    [this, asyncResp, value](
-                    const boost::system::error_code ec) {
-                        if (ec) {
-                            messages::internalError(asyncResp->res);
-                            return;
-                        }
-                        messages::success(asyncResp->res);
-                    },
-                "com.usi.Ssdarray.Firmware",
-                "/xyz/openbmc_project/ssdarray/firmware/update",
-                "org.freedesktop.DBus.Properties", "Set",
-                "com.usi.Ssdarray.Update", "Value", std::variant<uint32_t>(*value)); 
-            //}
-        }
-    };
-    
-
     class Activate : public Node {
     public:
 
@@ -537,10 +394,10 @@ namespace redfish {
                 const std::vector<std::string>& params) override {           
             auto asyncResp = std::make_shared<AsyncResp>(res);
             
-            std::optional<uint32_t> value = 1;
-            //if (!json_util::readJson(req, res, "Value", value)) {
-            //    return;
-            //}
+            std::optional<uint32_t> value;
+            if (!json_util::readJson(req, res, "Value", value)) {
+                return;
+            }
             if(value) {
                 crow::connections::systemBus->async_method_call(
                         [this, asyncResp, value](
@@ -560,64 +417,6 @@ namespace redfish {
 
     };
     
-    class ActivateImage : public Node {
-    public:
-        
-        ActivateImage(CrowApp& app) : Node(app, "/redfish/v1/Switch/FirmwareService/ActivateImage/") {
-            entityPrivileges = {
-                {boost::beast::http::verb::get,{
-                        {"ConfigureUsers"},
-                        {"ConfigureManager"}}},
-                {boost::beast::http::verb::head,{
-                        {"Login"}}},
-                {boost::beast::http::verb::patch,{
-                        {"ConfigureUsers"}}},
-                {boost::beast::http::verb::put,{
-                        {"ConfigureUsers"}}},
-                {boost::beast::http::verb::delete_,{
-                        {"ConfigureUsers"}}},
-                {boost::beast::http::verb::post,{
-                        {"ConfigureUsers"}}}
-            };
-        }
-
-    private:   
-        
-        void doPatch(crow::Response& res, const crow::Request& req,
-                const std::vector<std::string>& params) override {
-            
-            auto asyncResp = std::make_shared<AsyncResp>(res);
-            res.jsonValue = {
-                {"@odata.context", "/redfish/v1/$metadata#USI.Switch.FirmwareService.ActivateImage"},
-                {"@odata.id", "/redfish/v1/Switch/FirmwareService/ActivateImage"},
-                {"@odata.type", "#ActivateImage.v1_1_0.ActivateImage"},
-                {"Name", "Activate Image Information"},
-                {"Description", "Activate Image"}
-            };
-            
-            std::optional<uint32_t> value;
-            if (!json_util::readJson(req, res, "Value", value)) {
-                return;
-            }
-            
-            crow::connections::systemBus->async_method_call(
-                    [this, asyncResp, value](
-                    const boost::system::error_code ec) {
-                        if (ec) {
-                            messages::internalError(asyncResp->res);
-                            return;
-                        }
-                        messages::success(asyncResp->res);
-                        asyncResp->res.jsonValue["status"] = "ok";
-                    },
-            "com.usi.Ssdarray.Firmware",
-            "/xyz/openbmc_project/ssdarray/firmware/activate",
-            "org.freedesktop.DBus.Properties", "Set",
-            "com.usi.Ssdarray.Activate", "Value", std::variant<uint32_t>(*value));
-        }
-    
-    };
-
 }
 
 
