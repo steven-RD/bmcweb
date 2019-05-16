@@ -304,12 +304,12 @@ namespace redfish {
                 const std::vector<std::string>& params) override {            
             auto asyncResp = std::make_shared<AsyncResp>(res);
             
-            std::optional<uint32_t> value;
+            std::optional<uint32_t> value = 123;
             std::optional<std::string> imageId;
             if (!json_util::readJson(req, res, "Value", value, "Imageid", imageId)) {
                 return;
             }
-            if (value) {
+            //if (value) {
                 crow::connections::systemBus->async_method_call(
                     [this, asyncResp, value](
                     const boost::system::error_code ec) {
@@ -323,7 +323,7 @@ namespace redfish {
                 "/xyz/openbmc_project/ssdarray/firmware/update",
                 "org.freedesktop.DBus.Properties", "Set",
                 "com.usi.Ssdarray.Update", "Value", std::variant<uint32_t>(*value)); 
-            }
+            //}
             if(imageId) {
                 crow::connections::systemBus->async_method_call(
                     [this, asyncResp, imageId](
@@ -537,10 +537,10 @@ namespace redfish {
                 const std::vector<std::string>& params) override {           
             auto asyncResp = std::make_shared<AsyncResp>(res);
             
-            std::optional<uint32_t> value;
-            if (!json_util::readJson(req, res, "Value", value)) {
-                return;
-            }
+            std::optional<uint32_t> value = 1;
+            //if (!json_util::readJson(req, res, "Value", value)) {
+            //    return;
+            //}
             if(value) {
                 crow::connections::systemBus->async_method_call(
                         [this, asyncResp, value](
