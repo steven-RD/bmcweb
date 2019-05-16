@@ -301,14 +301,15 @@ namespace redfish {
         }
         
         void doPatch(crow::Response& res, const crow::Request& req,
-                const std::vector<std::string>& params) override {
-            
+                const std::vector<std::string>& params) override {            
             auto asyncResp = std::make_shared<AsyncResp>(res);
-            std::optional<uint32_t> value = 11;
-            //if (!json_util::readJson(req, res, "Value", value)) {
-            //    return;
-            //}
-            //if (value) {
+            
+            std::optional<uint32_t> value;
+            std::optional<std::string> imageId;
+            if (!json_util::readJson(req, res, "Value", value, "Imageid", imageId)) {
+                return;
+            }
+            if (value) {
                 crow::connections::systemBus->async_method_call(
                     [this, asyncResp, value](
                     const boost::system::error_code ec) {
@@ -322,7 +323,23 @@ namespace redfish {
                 "/xyz/openbmc_project/ssdarray/firmware/update",
                 "org.freedesktop.DBus.Properties", "Set",
                 "com.usi.Ssdarray.Update", "Value", std::variant<uint32_t>(*value)); 
-            //}
+            }
+            if(imageId) {
+                crow::connections::systemBus->async_method_call(
+                    [this, asyncResp, imageId](
+                    const boost::system::error_code ec) {
+                        if (ec) {
+                            messages::internalError(asyncResp->res);
+                            return;
+                        }
+                        messages::success(asyncResp->res);
+                    },
+                "com.usi.Ssdarray.Firmware",
+                "/xyz/openbmc_project/ssdarray/firmware/update",
+                "org.freedesktop.DBus.Properties", "Set",
+                "com.usi.Ssdarray.Update", "Imageid", 
+                std::variant<std::string>(*imageId)); 
+            }
         }
 
     };
@@ -514,6 +531,31 @@ namespace redfish {
             "/xyz/openbmc_project/ssdarray/firmware/activate",
             "org.freedesktop.DBus.Properties", "GetAll",
             "com.usi.Ssdarray.Activate");
+        }
+        
+        void doPatch(crow::Response& res, const crow::Request& req,
+                const std::vector<std::string>& params) override {           
+            auto asyncResp = std::make_shared<AsyncResp>(res);
+            
+            std::optional<uint32_t> value;
+            if (!json_util::readJson(req, res, "Value", value)) {
+                return;
+            }
+            if(value) {
+                crow::connections::systemBus->async_method_call(
+                        [this, asyncResp, value](
+                        const boost::system::error_code ec) {
+                            if (ec) {
+                                messages::internalError(asyncResp->res);
+                                return;
+                            }
+                            messages::success(asyncResp->res);
+                        },
+                "com.usi.Ssdarray.Firmware",
+                "/xyz/openbmc_project/ssdarray/firmware/activate",
+                "org.freedesktop.DBus.Properties", "Set",
+                "com.usi.Ssdarray.Activate", "Value", std::variant<uint32_t>(*value));
+            }
         }
 
     };
