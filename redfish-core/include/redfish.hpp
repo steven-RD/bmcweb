@@ -30,6 +30,7 @@
 #include "../lib/thermal.hpp"
 #include "../lib/update_service.hpp"
 #include "../lib/usi_firmware.hpp"
+#include "../lib/usi_control.hpp"
 #include "webserver_common.hpp"
 
 namespace redfish {
