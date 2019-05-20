@@ -22,7 +22,7 @@ namespace redfish {
     class PowerSupply : public Node {
     public:
         
-        PowerSupply(CrowApp& app) : Node ("/redfish/v1/Swtich/PowerSupply/") {
+        PowerSupply(CrowApp& app) : Node (app, "/redfish/v1/Swtich/PowerSupply/") {
             entityPrivileges = {
                 {boost::beast::http::verb::get,{
                         {"ConfigureUsers"},
@@ -54,7 +54,7 @@ namespace redfish {
                 {"Description", "Get PowerSupply Information"}
             };
             
-            crow:;connections::systemBus->async_method_call(
+            crow::connections::systemBus->async_method_call(
                     [asyncResp](
                     const boost::system::error_code ec,
                     const std::variant<std::vector<std::string>>& property){
