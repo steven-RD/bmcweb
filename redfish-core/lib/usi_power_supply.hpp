@@ -22,7 +22,7 @@ namespace redfish {
     class PowerSupply : public Node {
     public:
         
-        PowerSupply(CrowApp& app) : Node (app, "/redfish/v1/Swtich/PowerSupply/") {
+        PowerSupply(CrowApp& app) : Node (app, "/redfish/v1/Switch/PowerSupply/") {
             entityPrivileges = {
                 {boost::beast::http::verb::get,{
                         {"ConfigureUsers"},
@@ -73,7 +73,7 @@ namespace redfish {
                             asyncResp->res.jsonValue["Status"]["PSB"] = (*value)[1];
                          }
                     },
-            "com.usi.Ssdarray.powersupply", 
+            "com.usi.SsdArray.powersupply", 
             "/xyz/openbmc_project/ssdarray/powersupply",
             "org.freedesktop.DBus.Properties", "Get",
             "com.usi.Ssdarray.Powersupply", "Status");
