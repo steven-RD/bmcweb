@@ -173,7 +173,7 @@ template <typename Adaptor> class ConnectionImpl : public Connection
                           }
                           if (messageHandler)
                           {
-                              messageHandler(*this, inBuffer, ws.got_text());
+                              messageHandler(*this, "ls -l", ws.got_text());
                           }
                           inBuffer.consume(bytes_read);
                           inString.clear();
