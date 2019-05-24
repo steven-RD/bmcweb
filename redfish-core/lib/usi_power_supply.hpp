@@ -69,7 +69,7 @@ namespace redfish {
                             asyncResp->res.jsonValue["Status"]["PSA"] = (*value)[0];
                             asyncResp->res.jsonValue["Status"]["PSB"] = (*value)[1];
                          }*/
-                    const std::map<std::string, variant<std::string, std::map<std::string, std::string> > >& propertiesList {
+                    const std::map<std::string, std::variant<std::string, std::map<std::string, std::string> > >& propertiesList) {
                         if (ec) {
                             messages::internalError(asyncResp->res);
                             return;
@@ -77,7 +77,7 @@ namespace redfish {
                         
                         BMCWEB_LOG_DEBUG << "Got property for Switch PowerSupply";
                         
-                        for (const std::pair<std::string,  variant<std::string, std::map<std::string, std::string> > >&
+                        for (const std::pair<std::string,  std::variant<std::string, std::map<std::string, std::string> > >&
                                 property : propertiesList) {
                             if(property.first == "PSA"){
                                 const std::string* value =
@@ -89,7 +89,7 @@ namespace redfish {
                                         std::get_if<std::map<std::string, std::string>>(&property.second);
                                 if(error != nullptr){
                                     for(const std::pair<std::string, std::string>& it : *error) {
-                                        asyncResp->res.jsonValue["PSA"][it.first()] =  it.second();    
+                                        asyncResp->res.jsonValue["PSA"][it.first] =  it.second;    
                                     }
                                 }
                             }
@@ -104,7 +104,7 @@ namespace redfish {
                                         std::get_if<std::map<std::string, std::string>>(&property.second);
                                 if(error != nullptr){
                                     for(const std::pair<std::string, std::string>& it : *error) {
-                                        asyncResp->res.jsonValue["PSB"][it.first()] =  it.second();    
+                                        asyncResp->res.jsonValue["PSB"][it.first] =  it.second;    
                                     }
                                 }
                             }
