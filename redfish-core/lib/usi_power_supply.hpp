@@ -18,6 +18,11 @@
 #include <variant>
 
 namespace redfish {
+    
+    using PowerSupplyTypeP = std::pair<std::string, 
+            std::variant<std::string, 
+            std::vector<std::pair<std::string, std::string> > > >;
+    using PowerSupplyType = std::vector<PowerSupplyTypeP>;
 
     class PowerSupply : public Node {
     public:
@@ -69,7 +74,7 @@ namespace redfish {
                             asyncResp->res.jsonValue["Status"]["PSA"] = (*value)[0];
                             asyncResp->res.jsonValue["Status"]["PSB"] = (*value)[1];
                          }*/
-                    const std::map<std::string, std::variant<std::string, std::map<std::string, std::string> > >& propertiesList) {
+                    /*const std::map<std::string, std::variant<std::string, std::map<std::string, std::string> > >& propertiesList) {
                         if (ec) {
                             messages::internalError(asyncResp->res);
                             return;
@@ -83,33 +88,41 @@ namespace redfish {
                                 const std::string* value =
                                         std::get_if<std::string>(&property.second);
                                 if (value != nullptr) {
-                                    asyncResp->res.jsonValue["PSA"] = *value;
+                                    asyncResp->res.jsonValue["Status"]["PSA"] = *value;
                                 }
                                 const std::map<std::string, std::string>* error = 
                                         std::get_if<std::map<std::string, std::string>>(&property.second);
                                 if(error != nullptr){
                                     for(const std::pair<std::string, std::string>& it : *error) {
-                                        asyncResp->res.jsonValue["PSA"][it.first] =  it.second;    
+                                        asyncResp->res.jsonValue["Status"]["PSA"][it.first] =  it.second;    
                                     }
                                 }
                             }
                             
-                            if(property.first == "PSB"){
-                                const std::string* value =
-                                        std::get_if<std::string>(&property.second);
-                                if (value != nullptr) {
-                                    asyncResp->res.jsonValue["PSB"] = *value;
-                                }
-                                const std::map<std::string, std::string>* error = 
-                                        std::get_if<std::map<std::string, std::string>>(&property.second);
-                                if(error != nullptr){
-                                    for(const std::pair<std::string, std::string>& it : *error) {
-                                        asyncResp->res.jsonValue["PSB"][it.first] =  it.second;    
-                                    }
-                                }
-                            }
-                            
+                        }*/
+                    const std::variant<PowerSupplyType>& propertiesList) {
+                        
+                         if (ec) {
+                            messages::internalError(asyncResp->res);
+                            return;
                         }
+                        BMCWEB_LOG_DEBUG << "Got property for Switch PowerSupply";
+                        PowerSupplyType *value= std::get_if<PowerSupplyType>(&propertiesList);   
+                        for(const PowerSupplyTypeP& property : *value) {
+                            const std::string* val =
+                                    std::get_if<std::string>(&property.second);
+                            if (val != nullptr) {
+                                asyncResp->res.jsonValue["Status"][property.first] = *val;
+                            }
+                            const std::vector<std::pair<std::string, std::string> >* error = 
+                                        std::get_if<std::vector<std::pair<std::string, std::string> >>(&property.second);
+                                if(error != nullptr){
+                                    for(const std::pair<std::string, std::string>& it : *error) {
+                                        asyncResp->res.jsonValue["Status"][property.first][it.first] =  it.second;    
+                                    }
+                                }
+                        }
+                                     
                     },
             "com.usi.SsdArray.powersupply", 
             "/xyz/openbmc_project/ssdarray/powersupply",
