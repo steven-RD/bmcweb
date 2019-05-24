@@ -93,27 +93,34 @@ namespace redfish {
                 {"@odata.id", "/redfish/v1/Switch/FirmwareService/Functional"},
                 {"@odata.type", "#Functional.v1_1_0.Functional"},
                 {"Name", "Functional Information"},
-                {"Description", "Functional Information"}
+                {"Description", "Get Functional Information"}
             };
 
             crow::connections::systemBus->async_method_call(
                     [asyncResp](
                     const boost::system::error_code ec,
-                    const std::variant<std::vector<std::string>>& property) {
+                    //const std::variant<std::vector<std::string>>& property) 
+                    const std::variant< std::vector<std::pair<std::string, std::string>> >& property){
                         if (ec) {
                             messages::internalError(asyncResp->res);
                             return;
                         }
-                        BMCWEB_LOG_DEBUG << "Got "
+                        BMCWEB_LOG_DEBUG << "Got " 
                                 << "properties for FirmwareService Functional";
                         
-                        const std::vector<std::string> *value =
-                                std::get_if<std::vector<std::string>>(&property);
+                        //const std::vector<std::string> *value =
+                        //        std::get_if<std::vector<std::string>>(&property);                       
+                        //if(value != nullptr){
+                        //    asyncResp->res.jsonValue["Version"]["FirmwareVersion"] = (*value)[0];
+                        //    asyncResp->res.jsonValue["Version"]["ConfigurationFile"] = (*value)[1];
+                        //}
+                        const std::vector<std::pair<std::string, std::string>> *value =
+                                std::get_if<std::vector<std::pair<std::string, std::string>>>(&property);
                         
                         if(value != nullptr){
-                            asyncResp->res.jsonValue["Version"]["FirmwareVersion"] = (*value)[0];
-                            asyncResp->res.jsonValue["Version"]["ConfigurationFile"] = (*value)[1];
-                         }
+                            asyncResp->res.jsonValue["Version"][(*value)[0].first()] = (*value)[0].second();
+                            asyncResp->res.jsonValue["Version"][(*value)[1].first()] = (*value)[1].second();
+                        }
                     },
             "com.usi.Ssdarray.Firmware",
             "/xyz/openbmc_project/ssdarray/firmware/functional",
@@ -162,7 +169,7 @@ namespace redfish {
                     [asyncResp](
                     const boost::system::error_code ec,
                     const std::vector<std::pair<std::string,
-                    std::variant < std::string>>>& propertiesList) {
+                    std::variant<std::string>>>& propertiesList) {
                         if (ec) {
                             messages::internalError(asyncResp->res);
                             return;
@@ -278,7 +285,7 @@ namespace redfish {
                 const std::vector<std::string>& params) override {            
             auto asyncResp = std::make_shared<AsyncResp>(res);
             
-            std::optional<uint32_t> value = 123;
+            std::optional<uint32_t> value;
             std::optional<std::string> imageId;
             if (!json_util::readJson(req, res, "Value", value, "Imageid", imageId)) {
                 return;
