@@ -126,7 +126,7 @@ namespace redfish {
                         }
                                      
                     },
-            "com.usi.SsdArray.Powersupply", 
+            "com.usi.Ssdarray.Powersupply", 
             "/xyz/openbmc_project/ssdarray/powersupply",
             "org.freedesktop.DBus.Properties", "Get",
             "com.usi.Ssdarray.Powersupply", "Status");
