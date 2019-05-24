@@ -22,7 +22,9 @@ namespace redfish {
     using PowerSupplyTypeP = std::pair<std::string, 
             std::variant<std::string, 
             std::vector<std::pair<std::string, std::string> > > >;
-    using PowerSupplyType = std::vector<PowerSupplyTypeP>;
+    using PowerSupplyType = std::vector<std::pair<std::string, 
+            std::variant<std::string, 
+            std::vector<std::pair<std::string, std::string> > > >>;
 
     class PowerSupply : public Node {
     public:
@@ -107,7 +109,7 @@ namespace redfish {
                             return;
                         }
                         BMCWEB_LOG_DEBUG << "Got property for Switch PowerSupply";
-                        PowerSupplyType *value= std::get_if<PowerSupplyType>(&propertiesList);   
+                        const PowerSupplyType *value= std::get_if<PowerSupplyType>(&propertiesList);   
                         for(const PowerSupplyTypeP& property : *value) {
                             const std::string* val =
                                     std::get_if<std::string>(&property.second);
