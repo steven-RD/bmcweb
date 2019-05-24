@@ -24,7 +24,7 @@ namespace redfish {
             std::vector<std::pair<std::string, std::string> > > >;
     using PowerSupplyType = std::vector<std::pair<std::string, 
             std::variant<std::string, 
-            std::vector<std::pair<std::string, std::string> > > >>;
+                std::vector<std::pair<std::string, std::string> > > >>;
 
     class PowerSupply : public Node {
     public:
@@ -118,15 +118,15 @@ namespace redfish {
                             }
                             const std::vector<std::pair<std::string, std::string> >* error = 
                                         std::get_if<std::vector<std::pair<std::string, std::string> >>(&property.second);
-                                if(error != nullptr){
-                                    for(const std::pair<std::string, std::string>& it : *error) {
-                                        asyncResp->res.jsonValue["Status"][property.first][it.first] =  it.second;    
-                                    }
+                            if(error != nullptr){
+                                for(const std::pair<std::string, std::string>& it : *error) {
+                                    asyncResp->res.jsonValue["Status"][property.first][it.first] =  it.second;    
                                 }
+                            }
                         }
                                      
                     },
-            "com.usi.SsdArray.powersupply", 
+            "com.usi.SsdArray.Powersupply", 
             "/xyz/openbmc_project/ssdarray/powersupply",
             "org.freedesktop.DBus.Properties", "Get",
             "com.usi.Ssdarray.Powersupply", "Status");
