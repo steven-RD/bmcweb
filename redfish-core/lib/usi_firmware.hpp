@@ -118,8 +118,8 @@ namespace redfish {
                                 std::get_if<std::vector<std::pair<std::string, std::string>>>(&property);
                         
                         if(value != nullptr){
-                            asyncResp->res.jsonValue["Version"][(*value)[0].first()] = (*value)[0].second();
-                            asyncResp->res.jsonValue["Version"][(*value)[1].first()] = (*value)[1].second();
+                            asyncResp->res.jsonValue["Version"][(*value)[0].first] = (*value)[0].second;
+                            asyncResp->res.jsonValue["Version"][(*value)[1].first] = (*value)[1].second;
                         }
                     },
             "com.usi.Ssdarray.Firmware",
