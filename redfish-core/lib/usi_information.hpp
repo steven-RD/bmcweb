@@ -31,7 +31,11 @@ namespace redfish {
 			     >
 			     >>;
     
-    class Information : public Node {
+    using USIInforType = std::map<std::string, std::variant<std::string, 
+                                std::map<std::string, std::string>, 
+                                std::map<std::string, std::map<std::string, std::string>> > >;
+    
+   /* class Information : public Node {
     public:
         
         Information(CrowApp& app) : Node(app, "/redfish/v1/Switch/Information/") {
@@ -81,8 +85,75 @@ namespace redfish {
             "org.freedesktop.DBus.Properties", "Get",
             "com.usi.Ssdarray.Info", "Info");
         }
-    };
+    };*/
     
+    class BindInfo : public Node {
+    public:
+        
+        BindInfo(CrowApp& app) : Node(app, "/redfish/v1/Switch/BindInfo/") {
+            entityPrivileges = {
+                {boost::beast::http::verb::get,{
+                        {"ConfigureUsers"},
+                        {"ConfigureManager"}}},
+                {boost::beast::http::verb::head,{
+                        {"Login"}}},
+                {boost::beast::http::verb::patch,{
+                        {"ConfigureUsers"}}},
+                {boost::beast::http::verb::put,{
+                        {"ConfigureUsers"}}},
+                {boost::beast::http::verb::delete_,{
+                        {"ConfigureUsers"}}},
+                {boost::beast::http::verb::post,{
+                        {"ConfigureUsers"}}}
+            };
+        }
+        
+    private:
+        
+        void doGet(crow::Response& res, const crow::Request& req,
+                const std::vector<std::string>& params) override {
+            
+            auto asyncResp = std::make_shared<AsyncResp>(res);
+            res.jsonValue = {
+                {"@odata.context", "/redfish/v1/$metadata#Switch.BindInfo"},
+                {"@odata.id", "/redfish/v1/Switch/BindInfo"},
+                {"@odata.type", "#Information.v1_1_0.BindInfo"},
+                {"Id", "BindInfo"},
+                {"Name", "USI Info Information"},
+                {"Description", "BindInfo Information"},               
+            };
+            
+            crow::connections::systemBus->async_method_call(
+            [asyncResp](
+                    const boost::system::error_code ec,
+                    const std::variant<USIInforType>& propertiesList){
+                
+                if (ec) {
+                    messages::internalError(asyncResp->res);
+                    return;
+                }
+                BMCWEB_LOG_DEBUG << "Got property for USI Bindinfo";
+                const USIInforType *value = 
+                            std::get_if<USIInforType>(&propertiesList);
+                if(value != nullptr) {
+                    for(const USIInforType& property : *value) {
+                        if(property.first = "Bindinfo") {
+                            const std::map<std::string, std::string>* infos =
+                                    std::get_if<std::map<std::string, std::string>(&property.second);
+                            for(const std::map<std::string, std::string>& info : *infos) {
+                                asyncResp->res.jsonValue["Info"][property.first][info.first] = info.second;
+                            }  
+                        }
+                    }
+                }
+            
+            },
+            "com.usi.Ssdarray.Info",
+            "/xyz/openbmc_project/ssdarray/info",
+            "org.freedesktop.DBus.Properties", "Get",
+            "com.usi.Ssdarray.Info", "Info");
+        }
+    };
     
 }
 

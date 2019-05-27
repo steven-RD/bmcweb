@@ -58,11 +58,12 @@ namespace redfish {
                     [asyncResp](
                     const boost::system::error_code ec,
                     const std::variant<std::string>& property) {
+                    
                         if (ec) {
                             messages::internalError(asyncResp->res);
                             return;
                         }
-                        BMCWEB_LOG_DEBUG << "Got  property for Firmware Power Switch";
+                        BMCWEB_LOG_DEBUG << "Got  property for Switch Power Switch";
 
                         const std::string* value =
                                 std::get_if<std::string>(&property);
