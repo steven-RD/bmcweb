@@ -289,7 +289,7 @@ namespace redfish {
             "org.freedesktop.DBus.Properties", "Get",
             "com.usi.Ssdarray.Info", "Info");
         }
-    
+    };
 }
 
 #endif /* USI_INFORMATION_HPP */
