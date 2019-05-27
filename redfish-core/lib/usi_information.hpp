@@ -144,7 +144,7 @@ namespace redfish {
                         if(property.first == "Bindinfo") {
                             const std::map<std::string, std::string>* infos =
                                     std::get_if<std::map<std::string, std::string>>(&property.second);
-                            for(const std::map<std::string, std::string>& info : *infos) {
+                            for(const std::pair<std::string, std::string>& info : *infos) {
                                 asyncResp->res.jsonValue["Info"][property.first][info.first] = info.second;
                             }  
                         }
