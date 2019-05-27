@@ -66,6 +66,11 @@ namespace redfish {
             nodes.emplace_back(std::make_unique<PowerSwitch>(app));  
             nodes.emplace_back(std::make_unique<BindInfo>(app));  
             nodes.emplace_back(std::make_unique<BindInfoTest>(app)); 
+            nodes.emplace_back(std::make_unique<DspInfo>(app));  
+            nodes.emplace_back(std::make_unique<SwitchInfo>(app)); 
+            nodes.emplace_back(std::make_unique<CableInfo>(app));  
+            nodes.emplace_back(std::make_unique<SsdInfo>(app)); 
+            nodes.emplace_back(std::make_unique<PatopoInfo>(app)); 
             
             nodes.emplace_back(std::make_unique<AccountService>(app));
             nodes.emplace_back(std::make_unique<AccountsCollection>(app));
