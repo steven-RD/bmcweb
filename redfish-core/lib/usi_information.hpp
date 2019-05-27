@@ -152,8 +152,8 @@ namespace redfish {
                             if (none != nullptr) {
                                 asyncResp->res.jsonValue["Info"][property.first] = *none;
                             }
-                            const std::map<std::string, std::string>* infos =
-                                    std::get_if<std::map<std::string, std::string>>(&property.second);
+                            const DicStrType* infos =
+                                    std::get_if<DicStrType>(&property.second);
                             if (infos != nullptr) {
                                 for(const std::pair<std::string, std::string>& info : *infos) {
                                     asyncResp->res.jsonValue["Info"][property.first][info.first] = info.second;
