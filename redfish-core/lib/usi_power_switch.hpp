@@ -73,7 +73,7 @@ namespace redfish {
             "com.usi.Ssdarray.Powerswitch",
             "/xyz/openbmc_project/ssdarray/powerswitch",
             "org.freedesktop.DBus.Properties", "Get",
-            "com.usi.Ssdarray.Powerswitch");
+            "com.usi.Ssdarray.Powerswitch", "Status");
          }
          
      };
