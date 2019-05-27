@@ -56,7 +56,7 @@ namespace redfish {
             res.jsonValue = {
                 {"@odata.context", "/redfish/v1/$metadata#USI.Switch.PowerSupply"},
                 {"@odata.id", "/redfish/v1/Switch/PowerSupply"},
-                {"@odata.type", "#Control.v1_1_0.PowerSupply"},
+                {"@odata.type", "#PowerSupply.v1_1_0.PowerSupply"},
                 {"Name", "PowerSupply Information"},
                 {"Description", "Get PowerSupply Information"}
             };
@@ -64,18 +64,6 @@ namespace redfish {
             crow::connections::systemBus->async_method_call(
                     [asyncResp](
                     const boost::system::error_code ec,
-                    /*const std::variant<std::vector<std::string>>& property){                    
-                        if (ec) {
-                            messages::internalError(asyncResp->res);
-                            return;
-                        }
-                        BMCWEB_LOG_DEBUG << "Got property for Switch PowerSupply";
-                        const std::vector<std::string> *value =
-                                std::get_if<std::vector<std::string>>(&property);
-                        if(value != nullptr){
-                            asyncResp->res.jsonValue["Status"]["PSA"] = (*value)[0];
-                            asyncResp->res.jsonValue["Status"]["PSB"] = (*value)[1];
-                         }*/
                     /*const std::map<std::string, std::variant<std::string, std::map<std::string, std::string> > >& propertiesList) {
                         if (ec) {
                             messages::internalError(asyncResp->res);
@@ -104,7 +92,7 @@ namespace redfish {
                         }*/
                     const std::variant<PowerSupplyType>& propertiesList) {
                         
-                         if (ec) {
+                        if (ec) {
                             messages::internalError(asyncResp->res);
                             return;
                         }

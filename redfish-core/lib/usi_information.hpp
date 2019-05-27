@@ -77,13 +77,13 @@ namespace redfish {
             asyncResp->res.jsonValue["Id"] = "InformationService";
             asyncResp->res.jsonValue["Name"] = "InformationService Information";
             asyncResp->res.jsonValue["Description"] = "InformationService Information";
-            asyncResp->res.jsonValue["Firmware"]["@odata.id1"] = "/redfish/v1/Switch/AllInformations";
-            asyncResp->res.jsonValue["Firmware"]["@odata.id2"] = "/redfish/v1/Switch/BindInfo";
-            asyncResp->res.jsonValue["Firmware"]["@odata.id3"] = "/redfish/v1/Switch/DspInfo";
-            asyncResp->res.jsonValue["Firmware"]["@odata.id4"] = "/redfish/v1/Switch/SwitchInfo";
-            asyncResp->res.jsonValue["Firmware"]["@odata.id5"] = "/redfish/v1/Switch/CableInfo";
-            asyncResp->res.jsonValue["Firmware"]["@odata.id6"] = "/redfish/v1/Switch/SsdInfo";
-            asyncResp->res.jsonValue["Firmware"]["@odata.id7"] = "/redfish/v1/Switch/PatopoInfo";
+            asyncResp->res.jsonValue["Info"]["@odata.id1"] = "/redfish/v1/Switch/AllInformations";
+            asyncResp->res.jsonValue["Info"]["@odata.id2"] = "/redfish/v1/Switch/BindInfo";
+            asyncResp->res.jsonValue["Info"]["@odata.id3"] = "/redfish/v1/Switch/DspInfo";
+            asyncResp->res.jsonValue["Info"]["@odata.id4"] = "/redfish/v1/Switch/SwitchInfo";
+            asyncResp->res.jsonValue["Info"]["@odata.id5"] = "/redfish/v1/Switch/CableInfo";
+            asyncResp->res.jsonValue["Info"]["@odata.id6"] = "/redfish/v1/Switch/SsdInfo";
+            asyncResp->res.jsonValue["Info"]["@odata.id7"] = "/redfish/v1/Switch/PatopoInfo";
         }
     };
     
@@ -115,12 +115,12 @@ namespace redfish {
             
             auto asyncResp = std::make_shared<AsyncResp>(res);
             res.jsonValue = {
-                {"@odata.context", "/redfish/v1/$metadata#Switch.Information"},
-                {"@odata.id", "/redfish/v1/Switch/Information"},
-                {"@odata.type", "#Information.v1_1_0.Information"},
-                {"Id", "Information"},
-                {"Name", "USI Info Information"},
-                {"Description", "Info Information"},               
+                {"@odata.context", "/redfish/v1/$metadata#Switch.AllInformations"},
+                {"@odata.id", "/redfish/v1/Switch/AllInformations"},
+                {"@odata.type", "#AllInformations.v1_1_0.AllInformations"},
+                {"Id", "AllInformations"},
+                {"Name", "USI AllInformations"},
+                {"Description", "AllInformations"},               
             };
             
             crow::connections::systemBus->async_method_call(
@@ -132,7 +132,7 @@ namespace redfish {
                     messages::internalError(asyncResp->res);
                     return;
                 }
-                BMCWEB_LOG_DEBUG << "Got property for USI Bindinfo";
+                BMCWEB_LOG_DEBUG << "Got property for USI AllInformations";
                 const InfoType *value = 
                             std::get_if<InfoType>(&propertiesList);
                 if(value != nullptr) {
@@ -189,7 +189,6 @@ namespace redfish {
                                     std::get_if<DicStrDicType>(&property.second);
                             if (cables != nullptr) {
                                 for(const std::pair<std::string, DicStrType>& cable : *cables) {
-                                    //asyncResp->res.jsonValue["Info"][property.first][cable.first] = cable.second;
                                     for(const std::pair<std::string, std::string>& info : cable.second) {
                                         asyncResp->res.jsonValue["Info"][property.first][cable.first][info.first] = info.second;
                                     } 
@@ -418,7 +417,7 @@ namespace redfish {
             res.jsonValue = {
                 {"@odata.context", "/redfish/v1/$metadata#Switch.DspInfo"},
                 {"@odata.id", "/redfish/v1/Switch/DspInfo"},
-                {"@odata.type", "#Information.v1_1_0.DspInfo"},
+                {"@odata.type", "#DspInfo.v1_1_0.DspInfo"},
                 {"Id", "DspInfo"},
                 {"Name", "USI Info Information"},
                 {"Description", "DspInfo Information"},               
@@ -493,7 +492,7 @@ namespace redfish {
             res.jsonValue = {
                 {"@odata.context", "/redfish/v1/$metadata#Switch.SwitchInfo"},
                 {"@odata.id", "/redfish/v1/Switch/SwitchInfo"},
-                {"@odata.type", "#Information.v1_1_0.SwitchInfo"},
+                {"@odata.type", "#SwitchInfo.v1_1_0.SwitchInfo"},
                 {"Id", "SwitchInfo"},
                 {"Name", "USI Info Information"},
                 {"Description", "SwitchInfo Information"},               
@@ -568,7 +567,7 @@ namespace redfish {
             res.jsonValue = {
                 {"@odata.context", "/redfish/v1/$metadata#Switch.CableInfo"},
                 {"@odata.id", "/redfish/v1/Switch/CableInfo"},
-                {"@odata.type", "#Information.v1_1_0.CableInfo"},
+                {"@odata.type", "#CableInfo.v1_1_0.CableInfo"},
                 {"Id", "CableInfo"},
                 {"Name", "USI Info Information"},
                 {"Description", "CableInfo Information"},               
@@ -646,7 +645,7 @@ namespace redfish {
             res.jsonValue = {
                 {"@odata.context", "/redfish/v1/$metadata#Switch.SsdInfo"},
                 {"@odata.id", "/redfish/v1/Switch/SsdInfo"},
-                {"@odata.type", "#Information.v1_1_0.SsdInfo"},
+                {"@odata.type", "#SsdInfo.v1_1_0.SsdInfo"},
                 {"Id", "SsdInfo"},
                 {"Name", "USI Info Information"},
                 {"Description", "SsdInfo Information"},               
@@ -723,7 +722,7 @@ namespace redfish {
             res.jsonValue = {
                 {"@odata.context", "/redfish/v1/$metadata#Switch.PatopoInfo"},
                 {"@odata.id", "/redfish/v1/Switch/PatopoInfo"},
-                {"@odata.type", "#Information.v1_1_0.PatopoInfo"},
+                {"@odata.type", "#PatopoInfo.v1_1_0.PatopoInfo"},
                 {"Id", "PatopoInfo"},
                 {"Name", "USI Info Information"},
                 {"Description", "PatopoInfo Information"},               
