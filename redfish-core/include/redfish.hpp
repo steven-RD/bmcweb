@@ -32,6 +32,7 @@
 #include "../lib/usi_firmware.hpp"
 #include "../lib/usi_control.hpp"
 #include "../lib/usi_power_supply.hpp"
+#include "../lib/usi_power_switch.hpp"
 #include "webserver_common.hpp"
 
 namespace redfish {
@@ -61,6 +62,7 @@ namespace redfish {
             nodes.emplace_back(std::make_unique<Activate>(app));
             nodes.emplace_back(std::make_unique<Control>(app));
             nodes.emplace_back(std::make_unique<PowerSupply>(app));
+            nodes.emplace_back(std::make_unique<PowerSwitch>(app));            
             
             nodes.emplace_back(std::make_unique<AccountService>(app));
             nodes.emplace_back(std::make_unique<AccountsCollection>(app));
