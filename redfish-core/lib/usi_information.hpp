@@ -35,6 +35,10 @@ namespace redfish {
                                 std::map<std::string, std::string>, 
                                 std::map<std::string, std::map<std::string, std::string>> > >;
     
+    using USIInforTypeP = std::pair<std::string, std::variant<std::string, 
+                                std::map<std::string, std::string>, 
+                                std::map<std::string, std::map<std::string, std::string>> > >; 
+    
    /* class Information : public Node {
     public:
         
@@ -136,7 +140,7 @@ namespace redfish {
                 const USIInforType *value = 
                             std::get_if<USIInforType>(&propertiesList);
                 if(value != nullptr) {
-                    for(const USIInforType& property : *value) {
+                    for(const USIInforTypeP& property : *value) {
                         if(property.first == "Bindinfo") {
                             const std::map<std::string, std::string>* infos =
                                     std::get_if<std::map<std::string, std::string>>(&property.second);
