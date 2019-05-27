@@ -54,7 +54,9 @@ namespace redfish {
         RedfishService(CrowApp& app) {
             
             /*
-             * Add USI redfish class modules
+             * Add USI redfish class modules 
+             * author: USI Steven 
+             * date: 20190527
              */
             nodes.emplace_back(std::make_unique<FirmwareService>(app));
             nodes.emplace_back(std::make_unique<Functional>(app));
@@ -63,7 +65,8 @@ namespace redfish {
             nodes.emplace_back(std::make_unique<Activate>(app));
             nodes.emplace_back(std::make_unique<Control>(app));
             nodes.emplace_back(std::make_unique<PowerSupply>(app));
-            nodes.emplace_back(std::make_unique<PowerSwitch>(app));  
+            nodes.emplace_back(std::make_unique<PowerSwitch>(app));
+            nodes.emplace_back(std::make_unique<InformationService>(app));   
             nodes.emplace_back(std::make_unique<BindInfo>(app));  
             nodes.emplace_back(std::make_unique<BindInfoTest>(app)); 
             nodes.emplace_back(std::make_unique<DspInfo>(app));  
@@ -71,6 +74,7 @@ namespace redfish {
             nodes.emplace_back(std::make_unique<CableInfo>(app));  
             nodes.emplace_back(std::make_unique<SsdInfo>(app)); 
             nodes.emplace_back(std::make_unique<PatopoInfo>(app)); 
+            nodes.emplace_back(std::make_unique<AllInformations>(app)); 
             
             nodes.emplace_back(std::make_unique<AccountService>(app));
             nodes.emplace_back(std::make_unique<AccountsCollection>(app));

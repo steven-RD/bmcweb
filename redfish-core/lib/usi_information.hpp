@@ -44,10 +44,53 @@ namespace redfish {
                                 std::map<std::string, std::string>, 
                                 std::map<std::string, std::map<std::string, std::string>> > >; 
     
-   /* class Information : public Node {
+    class InformationService : public Node {
+    public:
+
+        InformationService(CrowApp& app) : Node(app, "/redfish/v1/Switch/InformationService/") {
+            entityPrivileges = {
+                {boost::beast::http::verb::get,{
+                        {"ConfigureUsers"},
+                        {"ConfigureManager"}}},
+                {boost::beast::http::verb::head,{
+                        {"Login"}}},
+                {boost::beast::http::verb::patch,{
+                        {"ConfigureUsers"}}},
+                {boost::beast::http::verb::put,{
+                        {"ConfigureUsers"}}},
+                {boost::beast::http::verb::delete_,{
+                        {"ConfigureUsers"}}},
+                {boost::beast::http::verb::post,{
+                        {"ConfigureUsers"}}}
+            };
+        }
+
+    private:
+
+        void doGet(crow::Response& res, const crow::Request& req,
+                const std::vector<std::string>& params) override {
+            auto asyncResp = std::make_shared<AsyncResp>(res);
+            
+            asyncResp->res.jsonValue["@odata.context"] = "/redfish/v1/$metadata#USI.Switch.InformationService";
+            asyncResp->res.jsonValue["@odata.id"] = "/redfish/v1/Switch/InformationService";
+            asyncResp->res.jsonValue["@odata.type"] = "#InformationService.v1_1_0.InformationService";
+            asyncResp->res.jsonValue["Id"] = "InformationService";
+            asyncResp->res.jsonValue["Name"] = "InformationService Information";
+            asyncResp->res.jsonValue["Description"] = "InformationService Information";
+            asyncResp->res.jsonValue["Firmware"]["@odata.id1"] = "/redfish/v1/Switch/AllInformations";
+            asyncResp->res.jsonValue["Firmware"]["@odata.id2"] = "/redfish/v1/Switch/BindInfo";
+            asyncResp->res.jsonValue["Firmware"]["@odata.id3"] = "/redfish/v1/Switch/DspInfo";
+            asyncResp->res.jsonValue["Firmware"]["@odata.id4"] = "/redfish/v1/Switch/SwitchInfo";
+            asyncResp->res.jsonValue["Firmware"]["@odata.id5"] = "/redfish/v1/Switch/CableInfo";
+            asyncResp->res.jsonValue["Firmware"]["@odata.id6"] = "/redfish/v1/Switch/SsdInfo";
+            asyncResp->res.jsonValue["Firmware"]["@odata.id7"] = "/redfish/v1/Switch/PatopoInfo";
+        }
+    };
+    
+    class AllInformations : public Node {
     public:
         
-        Information(CrowApp& app) : Node(app, "/redfish/v1/Switch/Information/") {
+        AllInformations(CrowApp& app) : Node(app, "/redfish/v1/Switch/AllInformations/") {
             entityPrivileges = {
                 {boost::beast::http::verb::get,{
                         {"ConfigureUsers"},
@@ -83,18 +126,117 @@ namespace redfish {
             crow::connections::systemBus->async_method_call(
             [asyncResp](
                     const boost::system::error_code ec,
-                    const std::vector<std::pair<
-                    std::string, std::variant<uint32_t, uint16_t, uint8_t>>>&
-                    propertiesList){
+                    const std::variant<InfoType>& propertiesList){
                 
-            
+                if (ec) {
+                    messages::internalError(asyncResp->res);
+                    return;
+                }
+                BMCWEB_LOG_DEBUG << "Got property for USI Bindinfo";
+                const InfoType *value = 
+                            std::get_if<InfoType>(&propertiesList);
+                if(value != nullptr) {
+                    for(const InfoTypeP& property : *value) {
+                        if(property.first == "Bindinfo") {
+                            const std::string* none =
+                                    std::get_if<std::string>(&property.second); ///Bindinfo : None
+                            if (none != nullptr) {
+                                asyncResp->res.jsonValue["Info"][property.first] = *none;
+                            }
+                            const DicStrType* infos =
+                                    std::get_if<DicStrType>(&property.second);
+                            if (infos != nullptr) {
+                                for(const std::pair<std::string, std::string>& info : *infos) {
+                                    asyncResp->res.jsonValue["Info"][property.first][info.first] = info.second;
+                                } 
+                            } 
+                        }
+                        if(property.first == "Dspinfo") {
+                            const std::string* none =
+                                    std::get_if<std::string>(&property.second); ///DspInfo : None
+                            if (none != nullptr) {
+                                asyncResp->res.jsonValue["Info"][property.first] = *none;
+                            }
+                            const DicStrType* infos =
+                                    std::get_if<DicStrType>(&property.second);
+                            if (infos != nullptr) {
+                                for(const std::pair<std::string, std::string>& info : *infos) {
+                                    asyncResp->res.jsonValue["Info"][property.first][info.first] = info.second;
+                                } 
+                            } 
+                        }
+                        if(property.first == "Swinfo") {
+                            const std::string* none =
+                                    std::get_if<std::string>(&property.second); ///SwInfo : None
+                            if (none != nullptr) {
+                                asyncResp->res.jsonValue["Info"][property.first] = *none;
+                            }
+                            const DicStrType* infos =
+                                    std::get_if<DicStrType>(&property.second);
+                            if (infos != nullptr) {
+                                for(const std::pair<std::string, std::string>& info : *infos) {
+                                    asyncResp->res.jsonValue["Info"][property.first][info.first] = info.second;
+                                } 
+                            } 
+                        }
+                        if(property.first == "Cableinfo") {
+                            const std::string* none =
+                                    std::get_if<std::string>(&property.second); ///CableInfo : None
+                            if (none != nullptr) {
+                                asyncResp->res.jsonValue["Info"][property.first] = *none;
+                            }
+                            const DicStrDicType* cables =
+                                    std::get_if<DicStrDicType>(&property.second);
+                            if (cables != nullptr) {
+                                for(const std::pair<std::string, DicStrType>& cable : *cables) {
+                                    //asyncResp->res.jsonValue["Info"][property.first][cable.first] = cable.second;
+                                    for(const std::pair<std::string, std::string>& info : cable.second) {
+                                        asyncResp->res.jsonValue["Info"][property.first][cable.first][info.first] = info.second;
+                                    } 
+                                }
+                            } 
+                        }
+                        if(property.first == "Ssdinfo") {
+                            const std::string* none =
+                                    std::get_if<std::string>(&property.second); ///SsdInfo : None
+                            if (none != nullptr) {
+                                asyncResp->res.jsonValue["Info"][property.first] = *none;
+                            }
+                            const DicStrDicType* ssds =
+                                    std::get_if<DicStrDicType>(&property.second);
+                            if (ssds != nullptr) {
+                                for(const std::pair<std::string, DicStrType>& ssd : *ssds) {
+                                    for(const std::pair<std::string, std::string>& info : ssd.second) {
+                                        asyncResp->res.jsonValue["Info"][property.first][ssd.first][info.first] = info.second;
+                                    } 
+                                }
+                            } 
+                        }
+                        if(property.first == "Patopoinfo") {
+                            const std::string* none =
+                                    std::get_if<std::string>(&property.second); ///PatopoInfo : None
+                            if (none != nullptr) {
+                                asyncResp->res.jsonValue["Info"][property.first] = *none;
+                            }
+                            const DicStrDicType* patops =
+                                    std::get_if<DicStrDicType>(&property.second);
+                            if (patops != nullptr) {
+                                for(const std::pair<std::string, DicStrType>& patop : *patops) {
+                                    for(const std::pair<std::string, std::string>& info : patop.second) {
+                                        asyncResp->res.jsonValue["Info"][property.first][patop.first][info.first] = info.second;
+                                    } 
+                                }
+                            } 
+                        }                        
+                    }
+                }
             },
             "com.usi.Ssdarray.Info",
             "/xyz/openbmc_project/ssdarray/info",
             "org.freedesktop.DBus.Properties", "Get",
             "com.usi.Ssdarray.Info", "Info");
         }
-    };*/
+    };
     
     class BindInfo : public Node {
     public:
@@ -349,12 +491,12 @@ namespace redfish {
             
             auto asyncResp = std::make_shared<AsyncResp>(res);
             res.jsonValue = {
-                {"@odata.context", "/redfish/v1/$metadata#Switch.Switch"},
-                {"@odata.id", "/redfish/v1/Switch/DspInfo"},
-                {"@odata.type", "#Information.v1_1_0.DspInfo"},
+                {"@odata.context", "/redfish/v1/$metadata#Switch.SwitchInfo"},
+                {"@odata.id", "/redfish/v1/Switch/SwitchInfo"},
+                {"@odata.type", "#Information.v1_1_0.SwitchInfo"},
                 {"Id", "SwitchInfo"},
                 {"Name", "USI Info Information"},
-                {"Description", "Switch Information"},               
+                {"Description", "SwitchInfo Information"},               
             };
             
             crow::connections::systemBus->async_method_call(
@@ -373,7 +515,7 @@ namespace redfish {
                     for(const InfoTypeP& property : *value) {
                         if(property.first == "Swinfo") {
                             const std::string* none =
-                                    std::get_if<std::string>(&property.second); ///DspInfo : None
+                                    std::get_if<std::string>(&property.second); ///SwInfo : None
                             if (none != nullptr) {
                                 asyncResp->res.jsonValue["Info"][property.first] = *none;
                             }
@@ -448,7 +590,7 @@ namespace redfish {
                     for(const InfoTypeP& property : *value) {
                         if(property.first == "Cableinfo") {
                             const std::string* none =
-                                    std::get_if<std::string>(&property.second); ///DspInfo : None
+                                    std::get_if<std::string>(&property.second); ///CableInfo : None
                             if (none != nullptr) {
                                 asyncResp->res.jsonValue["Info"][property.first] = *none;
                             }
@@ -603,7 +745,7 @@ namespace redfish {
                     for(const InfoTypeP& property : *value) {
                         if(property.first == "Patopoinfo") {
                             const std::string* none =
-                                    std::get_if<std::string>(&property.second); ///SsdInfo : None
+                                    std::get_if<std::string>(&property.second); ///PatopoInfo : None
                             if (none != nullptr) {
                                 asyncResp->res.jsonValue["Info"][property.first] = *none;
                             }
