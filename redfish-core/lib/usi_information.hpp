@@ -47,7 +47,7 @@ namespace redfish {
     class InformationService : public Node {
     public:
 
-        InformationService(CrowApp& app) : Node(app, "/redfish/v1/Switch/InformationService/") {
+        InformationService(CrowApp& app) : Node(app, "/redfish/v1/Managers/Switch/InformationService/") {
             entityPrivileges = {
                 {boost::beast::http::verb::get,{
                         {"ConfigureUsers"},
@@ -71,26 +71,26 @@ namespace redfish {
                 const std::vector<std::string>& params) override {
             auto asyncResp = std::make_shared<AsyncResp>(res);
             
-            asyncResp->res.jsonValue["@odata.context"] = "/redfish/v1/$metadata#USI.Switch.InformationService";
-            asyncResp->res.jsonValue["@odata.id"] = "/redfish/v1/Switch/InformationService";
+            asyncResp->res.jsonValue["@odata.context"] = "/redfish/v1/$metadata#USI.Managers.Switch.InformationService";
+            asyncResp->res.jsonValue["@odata.id"] = "/redfish/v1/Managers/Switch/InformationService";
             asyncResp->res.jsonValue["@odata.type"] = "#InformationService.v1_1_0.InformationService";
             asyncResp->res.jsonValue["Id"] = "InformationService";
             asyncResp->res.jsonValue["Name"] = "InformationService Information";
             asyncResp->res.jsonValue["Description"] = "InformationService Information";
-            asyncResp->res.jsonValue["Info"]["@odata.id1"] = "/redfish/v1/Switch/AllInformations";
-            asyncResp->res.jsonValue["Info"]["@odata.id2"] = "/redfish/v1/Switch/BindInfo";
-            asyncResp->res.jsonValue["Info"]["@odata.id3"] = "/redfish/v1/Switch/DspInfo";
-            asyncResp->res.jsonValue["Info"]["@odata.id4"] = "/redfish/v1/Switch/SwitchInfo";
-            asyncResp->res.jsonValue["Info"]["@odata.id5"] = "/redfish/v1/Switch/CableInfo";
-            asyncResp->res.jsonValue["Info"]["@odata.id6"] = "/redfish/v1/Switch/SsdInfo";
-            asyncResp->res.jsonValue["Info"]["@odata.id7"] = "/redfish/v1/Switch/PatopoInfo";
+            asyncResp->res.jsonValue["Info"]["@odata.id1"] = "/redfish/v1/Managers/Switch/AllInformations";
+            asyncResp->res.jsonValue["Info"]["@odata.id2"] = "/redfish/v1/Managers/Switch/BindInfo";
+            asyncResp->res.jsonValue["Info"]["@odata.id3"] = "/redfish/v1/Managers/Switch/DspInfo";
+            asyncResp->res.jsonValue["Info"]["@odata.id4"] = "/redfish/v1/Managers/Switch/SwitchInfo";
+            asyncResp->res.jsonValue["Info"]["@odata.id5"] = "/redfish/v1/Managers/Switch/CableInfo";
+            asyncResp->res.jsonValue["Info"]["@odata.id6"] = "/redfish/v1/Managers/Switch/SsdInfo";
+            asyncResp->res.jsonValue["Info"]["@odata.id7"] = "/redfish/v1/Managers/Switch/PatopoInfo";
         }
     };
     
     class AllInformations : public Node {
     public:
         
-        AllInformations(CrowApp& app) : Node(app, "/redfish/v1/Switch/AllInformations/") {
+        AllInformations(CrowApp& app) : Node(app, "/redfish/v1/Managers/Switch/AllInformations/") {
             entityPrivileges = {
                 {boost::beast::http::verb::get,{
                         {"ConfigureUsers"},
@@ -115,7 +115,7 @@ namespace redfish {
             
             auto asyncResp = std::make_shared<AsyncResp>(res);
             res.jsonValue = {
-                {"@odata.context", "/redfish/v1/$metadata#Switch.AllInformations"},
+                {"@odata.context", "/redfish/v1/$metadata#Managers.Switch.AllInformations"},
                 {"@odata.id", "/redfish/v1/Switch/AllInformations"},
                 {"@odata.type", "#AllInformations.v1_1_0.AllInformations"},
                 {"Id", "AllInformations"},
@@ -240,7 +240,7 @@ namespace redfish {
     class BindInfo : public Node {
     public:
         
-        BindInfo(CrowApp& app) : Node(app, "/redfish/v1/Switch/BindInfo/") {
+        BindInfo(CrowApp& app) : Node(app, "/redfish/v1/Managers/Switch/BindInfo/") {
             entityPrivileges = {
                 {boost::beast::http::verb::get,{
                         {"ConfigureUsers"},
@@ -265,8 +265,8 @@ namespace redfish {
             
             auto asyncResp = std::make_shared<AsyncResp>(res);
             res.jsonValue = {
-                {"@odata.context", "/redfish/v1/$metadata#Switch.BindInfo"},
-                {"@odata.id", "/redfish/v1/Switch/BindInfo"},
+                {"@odata.context", "/redfish/v1/$metadata#Managers.Switch.BindInfo"},
+                {"@odata.id", "/redfish/v1/Managers/Switch/BindInfo"},
                 {"@odata.type", "#Information.v1_1_0.BindInfo"},
                 {"Id", "BindInfo"},
                 {"Name", "USI Info Information"},
@@ -315,7 +315,7 @@ namespace redfish {
     class BindInfoTest : public Node {
     public:
         
-        BindInfoTest(CrowApp& app) : Node(app, "/redfish/v1/Switch/BindInfoTest/") {
+        BindInfoTest(CrowApp& app) : Node(app, "/redfish/v1/Managers/Switch/BindInfoTest/") {
             entityPrivileges = {
                 {boost::beast::http::verb::get,{
                         {"ConfigureUsers"},
@@ -340,8 +340,8 @@ namespace redfish {
             
             auto asyncResp = std::make_shared<AsyncResp>(res);
             res.jsonValue = {
-                {"@odata.context", "/redfish/v1/$metadata#Switch.BindInfo"},
-                {"@odata.id", "/redfish/v1/Switch/BindInfo"},
+                {"@odata.context", "/redfish/v1/$metadata#USI.Managers.Switch.BindInfo"},
+                {"@odata.id", "/redfish/v1/Managers/Switch/BindInfo"},
                 {"@odata.type", "#Information.v1_1_0.BindInfo"},
                 {"Id", "BindInfo"},
                 {"Name", "USI Info Information"},
@@ -390,7 +390,7 @@ namespace redfish {
     class DspInfo : public Node {
     public:
         
-        DspInfo(CrowApp& app) : Node(app, "/redfish/v1/Switch/DspInfo/") {
+        DspInfo(CrowApp& app) : Node(app, "/redfish/v1/Managers/Switch/DspInfo/") {
             entityPrivileges = {
                 {boost::beast::http::verb::get,{
                         {"ConfigureUsers"},
@@ -415,8 +415,8 @@ namespace redfish {
             
             auto asyncResp = std::make_shared<AsyncResp>(res);
             res.jsonValue = {
-                {"@odata.context", "/redfish/v1/$metadata#Switch.DspInfo"},
-                {"@odata.id", "/redfish/v1/Switch/DspInfo"},
+                {"@odata.context", "/redfish/v1/$metadata#USI.Managers.Switch.DspInfo"},
+                {"@odata.id", "/redfish/v1/Managers/Switch/DspInfo"},
                 {"@odata.type", "#DspInfo.v1_1_0.DspInfo"},
                 {"Id", "DspInfo"},
                 {"Name", "USI Info Information"},
@@ -465,7 +465,7 @@ namespace redfish {
     class SwitchInfo : public Node {
     public:
         
-        SwitchInfo(CrowApp& app) : Node(app, "/redfish/v1/Switch/SwitchInfo/") {
+        SwitchInfo(CrowApp& app) : Node(app, "/redfish/v1/Managers/Switch/SwitchInfo/") {
             entityPrivileges = {
                 {boost::beast::http::verb::get,{
                         {"ConfigureUsers"},
@@ -490,8 +490,8 @@ namespace redfish {
             
             auto asyncResp = std::make_shared<AsyncResp>(res);
             res.jsonValue = {
-                {"@odata.context", "/redfish/v1/$metadata#Switch.SwitchInfo"},
-                {"@odata.id", "/redfish/v1/Switch/SwitchInfo"},
+                {"@odata.context", "/redfish/v1/$metadata#USI.Managers.Switch.SwitchInfo"},
+                {"@odata.id", "/redfish/v1/Managers/Switch/SwitchInfo"},
                 {"@odata.type", "#SwitchInfo.v1_1_0.SwitchInfo"},
                 {"Id", "SwitchInfo"},
                 {"Name", "USI Info Information"},
@@ -540,7 +540,7 @@ namespace redfish {
     class CableInfo : public Node {
     public:
         
-        CableInfo(CrowApp& app) : Node(app, "/redfish/v1/Switch/CableInfo/") {
+        CableInfo(CrowApp& app) : Node(app, "/redfish/v1/Managers/Switch/CableInfo/") {
             entityPrivileges = {
                 {boost::beast::http::verb::get,{
                         {"ConfigureUsers"},
@@ -565,8 +565,8 @@ namespace redfish {
             
             auto asyncResp = std::make_shared<AsyncResp>(res);
             res.jsonValue = {
-                {"@odata.context", "/redfish/v1/$metadata#Switch.CableInfo"},
-                {"@odata.id", "/redfish/v1/Switch/CableInfo"},
+                {"@odata.context", "/redfish/v1/$metadata#USI.Managers.Switch.CableInfo"},
+                {"@odata.id", "/redfish/v1/Managers/Switch/CableInfo"},
                 {"@odata.type", "#CableInfo.v1_1_0.CableInfo"},
                 {"Id", "CableInfo"},
                 {"Name", "USI Info Information"},
@@ -618,7 +618,7 @@ namespace redfish {
     class SsdInfo : public Node {
     public:
         
-        SsdInfo(CrowApp& app) : Node(app, "/redfish/v1/Switch/SsdInfo/") {
+        SsdInfo(CrowApp& app) : Node(app, "/redfish/v1/Managers/Switch/SsdInfo/") {
             entityPrivileges = {
                 {boost::beast::http::verb::get,{
                         {"ConfigureUsers"},
@@ -643,8 +643,8 @@ namespace redfish {
             
             auto asyncResp = std::make_shared<AsyncResp>(res);
             res.jsonValue = {
-                {"@odata.context", "/redfish/v1/$metadata#Switch.SsdInfo"},
-                {"@odata.id", "/redfish/v1/Switch/SsdInfo"},
+                {"@odata.context", "/redfish/v1/$metadata#USI.Managers.Switch.SsdInfo"},
+                {"@odata.id", "/redfish/v1/Managers/Switch/SsdInfo"},
                 {"@odata.type", "#SsdInfo.v1_1_0.SsdInfo"},
                 {"Id", "SsdInfo"},
                 {"Name", "USI Info Information"},
@@ -695,7 +695,7 @@ namespace redfish {
     class PatopoInfo : public Node {
     public:
         
-        PatopoInfo(CrowApp& app) : Node(app, "/redfish/v1/Switch/PatopoInfo/") {
+        PatopoInfo(CrowApp& app) : Node(app, "/redfish/v1/Managers/Switch/PatopoInfo/") {
             entityPrivileges = {
                 {boost::beast::http::verb::get,{
                         {"ConfigureUsers"},
@@ -720,7 +720,7 @@ namespace redfish {
             
             auto asyncResp = std::make_shared<AsyncResp>(res);
             res.jsonValue = {
-                {"@odata.context", "/redfish/v1/$metadata#Switch.PatopoInfo"},
+                {"@odata.context", "/redfish/v1/$metadata#USI.Managers.Switch.PatopoInfo"},
                 {"@odata.id", "/redfish/v1/Switch/PatopoInfo"},
                 {"@odata.type", "#PatopoInfo.v1_1_0.PatopoInfo"},
                 {"Id", "PatopoInfo"},

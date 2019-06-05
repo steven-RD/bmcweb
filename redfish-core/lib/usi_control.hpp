@@ -23,7 +23,7 @@ namespace redfish {
     class Control : public Node {
     public:
 
-        Control(CrowApp& app) : Node(app, "/redfish/v1/Switch/Control/") {
+        Control(CrowApp& app) : Node(app, "/redfish/v1/Managers/Switch/Control/") {
             entityPrivileges = {
                 {boost::beast::http::verb::get,{
                         {"ConfigureUsers"},
@@ -48,8 +48,8 @@ namespace redfish {
             
             auto asyncResp = std::make_shared<AsyncResp>(res);
             res.jsonValue = {
-                {"@odata.context", "/redfish/v1/$metadata#USI.Switch..Control"},
-                {"@odata.id", "/redfish/v1/Switch//Control"},
+                {"@odata.context", "/redfish/v1/$metadata#USI.Managers.Switch..Control"},
+                {"@odata.id", "/redfish/v1/Managers/Switch/Control"},
                 {"@odata.type", "#Control.v1_1_0.Control"},
                 {"Name", "Control Information"},
                 {"Description", "Get Control Information"}
