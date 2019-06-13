@@ -29,7 +29,7 @@ namespace redfish {
     class PowerSupply : public Node {
     public:
         
-        PowerSupply(CrowApp& app) : Node (app, "/redfish/v1/Managers/Switch/PowerSupply/") {
+        PowerSupply(CrowApp& app) : Node (app, "/redfish/v1/Switch/PowerSupply/") {
             entityPrivileges = {
                 {boost::beast::http::verb::get,{
                         {"ConfigureUsers"},
@@ -54,7 +54,7 @@ namespace redfish {
             
             auto asyncResp = std::make_shared<AsyncResp>(res);
             res.jsonValue = {
-                {"@odata.context", "/redfish/v1/$metadata#USI.Managers.Switch.PowerSupply"},
+                {"@odata.context", "/redfish/v1/$metadata#USI.Switch.PowerSupply"},
                 {"@odata.id", "/redfish/v1/Switch/PowerSupply"},
                 {"@odata.type", "#PowerSupply.v1_1_0.PowerSupply"},
                 {"Name", "PowerSupply Information"},
