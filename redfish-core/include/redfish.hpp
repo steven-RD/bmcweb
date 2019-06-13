@@ -34,6 +34,7 @@
 #include "../lib/usi_power_supply.hpp"
 #include "../lib/usi_power_switch.hpp"
 #include "../lib/usi_information.hpp"
+#include "../lib/usi_switch_service.hpp"
 #include "webserver_common.hpp"
 
 namespace redfish {
@@ -58,7 +59,7 @@ namespace redfish {
              * author: USI Steven 
              * date: 20190527
              */
-            nodes.emplace_back(std::make_unique<FirmwareService>(app));
+            nodes.emplace_back(std::make_unique<SwitchService>(app));
             nodes.emplace_back(std::make_unique<Functional>(app));
             nodes.emplace_back(std::make_unique<Ready>(app));
             nodes.emplace_back(std::make_unique<Update>(app));         
