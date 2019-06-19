@@ -18,18 +18,18 @@
 #include <variant>
 
 namespace redfish {
-    
-    using PowerSupplyTypeP = std::pair<std::string, 
-            std::variant<std::string, 
+
+    using PowerSupplyTypeP = std::pair<std::string,
+            std::variant<std::string,
             std::vector<std::pair<std::string, std::string> > > >;
-    using PowerSupplyType = std::vector<std::pair<std::string, 
-            std::variant<std::string, 
-                std::vector<std::pair<std::string, std::string> > > >>;
+    using PowerSupplyType = std::vector<std::pair<std::string,
+            std::variant<std::string,
+            std::vector<std::pair<std::string, std::string> > > >>;
 
     class PowerSupply : public Node {
     public:
-        
-        PowerSupply(CrowApp& app) : Node (app, "/redfish/v1/Switch/PowerSupply/") {
+
+        PowerSupply(CrowApp& app) : Node(app, "/redfish/v1/Switch/PowerSupply/") {
             entityPrivileges = {
                 {boost::beast::http::verb::get,{
                         {"ConfigureUsers"},
@@ -46,12 +46,12 @@ namespace redfish {
                         {"ConfigureUsers"}}}
             };
         }
-        
+
     private:
-        
+
         void doGet(crow::Response& res, const crow::Request& req,
                 const std::vector<std::string>& params) override {
-            
+
             auto asyncResp = std::make_shared<AsyncResp>(res);
             res.jsonValue = {
                 {"@odata.context", "/redfish/v1/$metadata#USI.Switch.PowerSupply"},
@@ -60,12 +60,7 @@ namespace redfish {
                 {"Name", "PowerSupply Information"},
                 {"Description", "Get PowerSupply Information"}
             };
-            res.jsonValue["Members@odata.count"] = 1;
-            res.jsonValue["Members"] = {
-                {
-                    {"@odata.id", "/redfish/v1/Switch/PowerSupply"}
-                }
-            
+
             crow::connections::systemBus->async_method_call(
                     [asyncResp](
                     const boost::system::error_code ec,
@@ -96,37 +91,37 @@ namespace redfish {
                             
                         }*/
                     const std::variant<PowerSupplyType>& propertiesList) {
-                        
+
                         if (ec) {
                             messages::internalError(asyncResp->res);
                             return;
                         }
                         BMCWEB_LOG_DEBUG << "Got property for Switch PowerSupply";
-                        const PowerSupplyType *value= std::get_if<PowerSupplyType>(&propertiesList);   
-                        for(const PowerSupplyTypeP& property : *value) {
+                        const PowerSupplyType *value = std::get_if<PowerSupplyType>(&propertiesList);
+                        for (const PowerSupplyTypeP& property : *value) {
                             const std::string* val =
                                     std::get_if<std::string>(&property.second);
                             if (val != nullptr) {
                                 asyncResp->res.jsonValue["Status"][property.first] = *val;
                             }
-                            const std::vector<std::pair<std::string, std::string> >* error = 
-                                        std::get_if<std::vector<std::pair<std::string, std::string> >>(&property.second);
-                            if(error != nullptr){
-                                for(const std::pair<std::string, std::string>& it : *error) {
-                                    asyncResp->res.jsonValue["Status"][property.first][it.first] =  it.second;    
+                            const std::vector<std::pair<std::string, std::string> >* error =
+                                    std::get_if<std::vector < std::pair<std::string, std::string> >>(&property.second);
+                            if (error != nullptr) {
+                                for (const std::pair<std::string, std::string>& it : *error) {
+                                    asyncResp->res.jsonValue["Status"][property.first][it.first] = it.second;
                                 }
                             }
                         }
-                                     
+
                     },
-            "com.usi.Ssdarray.Powersupply", 
+            "com.usi.Ssdarray.Powersupply",
             "/xyz/openbmc_project/ssdarray/powersupply",
             "org.freedesktop.DBus.Properties", "Get",
             "com.usi.Ssdarray.Powersupply", "Status");
         }
-        
+
     };
-    
+
 }
 
 
