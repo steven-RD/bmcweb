@@ -60,6 +60,11 @@ namespace redfish {
                 {"Name", "PowerSupply Information"},
                 {"Description", "Get PowerSupply Information"}
             };
+            res.jsonValue["Members@odata.count"] = 1;
+            res.jsonValue["Members"] = {
+                {
+                    {"@odata.id", "/redfish/v1/Switch/PowerSupply"}
+                }
             
             crow::connections::systemBus->async_method_call(
                     [asyncResp](

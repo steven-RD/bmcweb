@@ -53,10 +53,10 @@ namespace redfish {
             asyncResp->res.jsonValue["Id"] = "Firmware";
             asyncResp->res.jsonValue["Name"] = "FirmwareService Information";
             asyncResp->res.jsonValue["Description"] = "FirmwareService Information";
-            asyncResp->res.jsonValue["Firmware"]["@odata.id1"] = "/redfish/v1/Switch/FirmwareService/Functional";
-            asyncResp->res.jsonValue["Firmware"]["@odata.id2"] = "/redfish/v1/Switch/FirmwareService/Ready";
-            asyncResp->res.jsonValue["Firmware"]["@odata.id3"] = "/redfish/v1/Switch/FirmwareService/Update";
-            asyncResp->res.jsonValue["Firmware"]["@odata.id4"] = "/redfish/v1/Switch/FirmwareService/Activate";
+            asyncResp->res.jsonValue["Firmware"]["@odata.id1"] = "/redfish/v1/Switch/Functional";
+            asyncResp->res.jsonValue["Firmware"]["@odata.id2"] = "/redfish/v1/Switch/Ready";
+            asyncResp->res.jsonValue["Firmware"]["@odata.id3"] = "/redfish/v1/Switch/Update";
+            asyncResp->res.jsonValue["Firmware"]["@odata.id4"] = "/redfish/v1/Switch/Activate";
         }
 
     };
@@ -64,7 +64,7 @@ namespace redfish {
     class Functional : public Node {
     public:
 
-        Functional(CrowApp& app) : Node(app, "/redfish/v1/Switch/FirmwareService/Functional/") {
+        Functional(CrowApp& app) : Node(app, "/redfish/v1/Switch/Functional/") {
             entityPrivileges = {
                 {boost::beast::http::verb::get,{
                         {"ConfigureUsers"},
@@ -90,7 +90,7 @@ namespace redfish {
             auto asyncResp = std::make_shared<AsyncResp>(res);
             res.jsonValue = {
                 {"@odata.context", "/redfish/v1/$metadata#USI.Switch.FirmwareService.Functional"},
-                {"@odata.id", "/redfish/v1/Switch/FirmwareService/Functional"},
+                {"@odata.id", "/redfish/v1/Switch/Functional"},
                 {"@odata.type", "#Functional.v1_1_0.Functional"},
                 {"Name", "Functional Information"},
                 {"Description", "Get Functional Information"}
@@ -99,7 +99,6 @@ namespace redfish {
             crow::connections::systemBus->async_method_call(
                     [asyncResp](
                     const boost::system::error_code ec,
-                    //const std::variant<std::vector<std::string>>& property) 
                     const std::variant<std::vector<std::pair<std::string, 
                             std::string>>>& property){
                         if (ec) {
@@ -128,7 +127,7 @@ namespace redfish {
     class Ready : public Node {
     public:
 
-        Ready(CrowApp& app) : Node(app, "/redfish/v1/Switch/FirmwareService/Ready/") {
+        Ready(CrowApp& app) : Node(app, "/redfish/v1/Switch/Ready/") {
             entityPrivileges = {
                 {boost::beast::http::verb::get,{
                         {"ConfigureUsers"},
@@ -154,7 +153,7 @@ namespace redfish {
             auto asyncResp = std::make_shared<AsyncResp>(res);
             res.jsonValue = {
                 {"@odata.context", "/redfish/v1/$metadata#USI.Switch.FirmwareService.Ready"},
-                {"@odata.id", "/redfish/v1/Switch/FirmwareService/Ready"},
+                {"@odata.id", "/redfish/v1/Switch/Ready"},
                 {"@odata.type", "#Ready.v1_1_0.Ready"},
                 {"Name", "Ready Information"},
                 {"Description", "Ready Information"}
@@ -201,7 +200,7 @@ namespace redfish {
     class Update : public Node {
     public:
 
-        Update(CrowApp& app) : Node(app, "/redfish/v1/Switch/FirmwareService/Update/") {
+        Update(CrowApp& app) : Node(app, "/redfish/v1/Switch/Update/") {
             entityPrivileges = {
                 {boost::beast::http::verb::get,{
                         {"ConfigureUsers"},
@@ -227,7 +226,7 @@ namespace redfish {
             auto asyncResp = std::make_shared<AsyncResp>(res);
             res.jsonValue = {
                 {"@odata.context", "/redfish/v1/$metadata#USI.Switch.FirmwareService.Update"},
-                {"@odata.id", "/redfish/v1/Managers/Switch/FirmwareService/Update"},
+                {"@odata.id", "/redfish/v1/Managers/Switch/Update"},
                 {"@odata.type", "#Update.v1_1_0.Update"},
                 {"Name", "Update Information"},
                 {"Description", "Get Update Status"}
@@ -324,7 +323,7 @@ namespace redfish {
     class Activate : public Node {
     public:
 
-        Activate(CrowApp& app) : Node(app, "/redfish/v1/Switch/FirmwareService/Activate/") {
+        Activate(CrowApp& app) : Node(app, "/redfish/v1/Switch/Activate/") {
             entityPrivileges = {
                 {boost::beast::http::verb::get,{
                         {"ConfigureUsers"},
@@ -350,7 +349,7 @@ namespace redfish {
             auto asyncResp = std::make_shared<AsyncResp>(res);
             res.jsonValue = {
                 {"@odata.context", "/redfish/v1/$metadata#USI.Switch.FirmwareService.Activate"},
-                {"@odata.id", "/redfish/v1/Switch/FirmwareService/Activate"},
+                {"@odata.id", "/redfish/v1/Switch/Activate"},
                 {"@odata.type", "#Activate.v1_1_0.Activate"},
                 {"Name", "Activate Information"},
                 {"Description", "Get Activate Information"}

@@ -16,8 +16,7 @@
 namespace redfish
 {
 
-class SwitchService : public Node
-{
+class SwitchService : public Node {
   public:
     SwitchService(CrowApp& app) : Node(app, "/redfish/v1/Switch/")
     {
@@ -85,7 +84,23 @@ class SwitchService : public Node
                     {
                         {"@odata.id", "/redfish/v1/Switch/Control"}
                     }},
-                    
+                {"Functional",
+                    {
+                        {"@odata.id", "/redfish/v1/Switch/Functional"}
+                    }},
+                {"Ready",
+                    {
+                        {"@odata.id", "/redfish/v1/Switch/Ready"}
+                    }},
+                {"Update",
+                    {
+                        {"@odata.id", "/redfish/v1/Switch/Update"}
+                    }},
+                {"Activate",
+                    {
+                        {"@odata.id", "/redfish/v1/Switch/Activate"}
+                    }},
+                  
                 {"FirmwareService",
                     {
                         {"@odata.id", "/redfish/v1/Switch/FirmwareService"}

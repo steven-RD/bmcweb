@@ -47,7 +47,7 @@ namespace redfish {
             
              auto asyncResp = std::make_shared<AsyncResp>(res);
             res.jsonValue = {
-                {"@odata.context", "/redfish/v1/$metadata#.Switch.PowerSwitch"},
+                {"@odata.context", "/redfish/v1/$metadata#USI.Switch.PowerSwitch"},
                 {"@odata.id", "/redfish/v1/Managers/Switch/PowerSwitch"},
                 {"@odata.type", "#PowerSwitch.v1_1_0.PowerSwitch"},
                 {"Name", "PowerSwitch Information"},
