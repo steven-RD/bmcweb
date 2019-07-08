@@ -21,6 +21,7 @@
 #include <token_authorization_middleware.hpp>
 #include <webassets.hpp>
 #include <webserver_common.hpp>
+#include <usi_switch_upload.hpp> ///add by USI Steven
 
 constexpr int defaultPort = 18080;
 
@@ -88,6 +89,7 @@ int main(int argc, char** argv)
     crow::dbus_monitor::requestRoutes(app);
     crow::image_upload::requestRoutes(app);
     crow::openbmc_mapper::requestRoutes(app);
+    crow::usi_switch_upload::requestRoutes(app); ///add by USI Steven
 #endif
 
 #ifdef BMCWEB_ENABLE_HOST_SERIAL_WEBSOCKET
