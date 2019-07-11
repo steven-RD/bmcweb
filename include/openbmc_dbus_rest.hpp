@@ -1870,8 +1870,7 @@ void handlePut(const crow::Request &req, crow::Response &res,
                                                             transaction->res,
                                                             boost::beast::http::status::forbidden,
                                                             forbiddenPropDesc,
-                                                            "usi_PCIe switch");
-                                                            //ec.message());
+                                                            ec.message());
                                                     }
                                                     else
                                                     {
