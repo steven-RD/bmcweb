@@ -515,7 +515,7 @@ class EventLogEntryCollection : public Node
         asyncResp->res.jsonValue["Description"] =
             "Collection of System Event Log Entries";
 
-#ifndef BMCWEB_ENABLE_REDFISH_DBUS_LOG_ENTRIES
+#ifdef BMCWEB_ENABLE_REDFISH_DBUS_LOG_ENTRIES
         nlohmann::json &logEntryArray = asyncResp->res.jsonValue["Members"];
         logEntryArray = nlohmann::json::array();
         // Go through the journal and create a unique ID for each entry
