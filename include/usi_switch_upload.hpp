@@ -110,8 +110,7 @@ namespace crow {
                     callback);
 
             std::string filepath(
-                    "/var/lib/obmc/" +
-                    boost::uuids::to_string(boost::uuids::random_generator()()));
+                    "/var/lib/obmc/" + filename);
             BMCWEB_LOG_DEBUG << "Writing file to " << filepath;
             std::ofstream out(filepath, std::ofstream::out | std::ofstream::binary |
                     std::ofstream::trunc);

@@ -103,7 +103,8 @@ inline void uploadImageHandler(const crow::Request& req, crow::Response& res,
         callback);
 
     std::string filepath(
-        "/tmp/images/" + filename);
+        "/tmp/images/" +
+        boost::uuids::to_string(boost::uuids::random_generator()()));
     BMCWEB_LOG_DEBUG << "Writing file to " << filepath;
     std::ofstream out(filepath, std::ofstream::out | std::ofstream::binary |
                                     std::ofstream::trunc);
