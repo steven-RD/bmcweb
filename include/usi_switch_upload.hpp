@@ -82,7 +82,7 @@ namespace crow {
                                 [](const auto& i) {
                                     return i.first ==
                                             "xyz.openbmc_project.Software.Version";
-                                }) != interfaces.end()) {
+                                }) == interfaces.end()) {
                         boost::system::error_code ec;
                         timeout.cancel(ec);
                         if (ec) {
