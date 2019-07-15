@@ -62,7 +62,7 @@ namespace crow {
                 res.end();
             };
 
-            std::string filePath("/var/lib/obmc/" + filename); 
+            std::string filePath("/var/lib/obmc/usiSwitchImage.tar");
             std::string tmpDirPath("/var/lib/obmc/");
             if(access(filePath.c_str(), F_OK) != 0) {  ///file not exist, write file
                 BMCWEB_LOG_DEBUG << "Writing file to " << filePath;
@@ -73,10 +73,9 @@ namespace crow {
                 struct stat statbuff;
                 if((access(filePath.c_str(), F_OK) == 0) && 
                     (stat(filePath.c_str(), &statbuff) == 0) && 
-                    (statbuff.st_size == req.body.size())) { /// file exist and size equal req.body
-                    
+                    (statbuff.st_size == req.body.size())) { /// file exist and size equal req.body                    
                     execl("/bin/tar", "tar", "-xf", filePath.c_str(), "-C", tmpDirPath.c_str(), (char*)0);
-                    
+                    execl("/bin/rm", "rm -rf", filePath.c_str(), (char*)0);
                     res.jsonValue = {
                         {"data", nullptr},
                         {"message", "200 OK"},
