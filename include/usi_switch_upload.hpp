@@ -22,6 +22,7 @@
 #include <memory>
 #include <unistd.h>
 #include <sys/stat.h>
+#include <sys/types.h>
 
 namespace crow {
     namespace usi_switch_upload {
