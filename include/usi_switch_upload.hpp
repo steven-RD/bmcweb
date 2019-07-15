@@ -20,29 +20,21 @@
 #include <dbus_singleton.hpp>
 #include <fstream>
 #include <memory>
+#include <unistd.h>
 
 namespace crow {
     namespace usi_switch_upload {
 
-        std::unique_ptr<sdbusplus::bus::match::match> fwUpdateMatcher;
 
         inline void uploadImageHandler(const crow::Request& req, crow::Response& res,
                 const std::string& filename) {
-            // Only allow one FW update at a time
-            if (fwUpdateMatcher != nullptr) {
-                res.addHeader("Retry-After", "30");
-                res.result(boost::beast::http::status::service_unavailable);
-                res.end();
-                return;
-            }
-            // Make this const static so it survives outside this method
+            
             static boost::asio::deadline_timer timeout(*req.ioService,
                     boost::posix_time::seconds(5));
 
             timeout.expires_from_now(boost::posix_time::seconds(15));
 
             auto timeoutHandler = [&res](const boost::system::error_code & ec) {
-                fwUpdateMatcher = nullptr;
                 if (ec == asio::error::operation_aborted) {
                     // expected, we were canceled before the timer completed.
                     return;
@@ -67,56 +59,37 @@ namespace crow {
                 res.end();
             };
 
-            std::function<void(sdbusplus::message::message&) > callback =
-                    [&res](sdbusplus::message::message & m) {
-                        BMCWEB_LOG_DEBUG << "Match fired";
-
-                        sdbusplus::message::object_path path;
-                        std::vector<std::pair<
-                                std::string,
-                                std::vector < std::pair<std::string, std::variant < std::string>>>>>
-                                interfaces;
-                        m.read(path, interfaces);
-
-                        if (std::find_if(interfaces.begin(), interfaces.end(),
-                                [](const auto& i) {
-                                    return i.first ==
-                                            "xyz.openbmc_project.Software.Version";
-                                }) == interfaces.end()) {
-                        boost::system::error_code ec;
-                        timeout.cancel(ec);
-                        if (ec) {
-                            BMCWEB_LOG_ERROR << "error canceling timer " << ec;
-                        }
-
-                        std::size_t index = path.str.rfind('/');
-                        if (index != std::string::npos) {
-                            path.str.erase(0, index + 1);
-                        }
-                        res.jsonValue = {
-                            {"data", std::move(path.str)},
-                            {"message", "200 OK"},
-                            {"status", "ok"}
-                        };
-                        BMCWEB_LOG_DEBUG << "ending response";
-                        res.end();
-                        fwUpdateMatcher = nullptr;
-                    }
+            std::string filepath( "/var/lib/obmc/usi_cfg_01_13_1p_s0_x16_m_u2.pmc");           
+            if(access(filepath.c_str(), F_OK) != 0) {
+                BMCWEB_LOG_DEBUG << "Writing file to " << filepath;
+                std::ofstream out(filepath, std::ofstream::out | std::ofstream::binary | std::ofstream::trunc);
+                out << req.body;
+                out.close();
+                timeout.async_wait(timeoutHandler);
+                if(access(filepath.c_str(), F_OK) == 0) {
+                    res.jsonValue = {
+                        {"data", nullptr},
+                        {"message", "200 OK"},
+                        {"status", "ok"}
                     };
-            fwUpdateMatcher = std::make_unique<sdbusplus::bus::match::match>(
-                    *crow::connections::systemBus,
-                    "interface='org.freedesktop.DBus.ObjectManager',type='signal',"
-                    "member='InterfacesAdded',path='/xyz/openbmc_project/software'",
-                    callback);
-
-            std::string filepath(
-                    "/var/lib/obmc/" + filename);
-            BMCWEB_LOG_DEBUG << "Writing file to " << filepath;
-            std::ofstream out(filepath, std::ofstream::out | std::ofstream::binary |
-                    std::ofstream::trunc);
-            out << req.body;
-            out.close();
-            timeout.async_wait(timeoutHandler);
+                    BMCWEB_LOG_DEBUG << "ending response";
+                    res.end();
+                } else {
+                    res.jsonValue = {
+                        {"data", nullptr},
+                        {"message", "Write image error!"},
+                        {"status", "error"}
+                    };
+                    res.end();
+                }
+            } else {
+                res.jsonValue = {
+                    {"data", nullptr},
+                    {"message", "image already exists!"},
+                    {"status", "error"}
+                };
+                res.end();
+            }
         }
 
         template <typename... Middlewares> void requestRoutes(Crow<Middlewares...>& app) {
