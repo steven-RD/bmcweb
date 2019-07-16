@@ -21,10 +21,11 @@
 #include <fstream>
 #include <memory>
 #include <unistd.h>
+#include <stdio.h>
 #include <sys/stat.h>
 #include <sys/types.h>
-#include <stdio.h>
 #include <sys/wait.h>
+#include <dirent.h>
 
 namespace crow {
     namespace usi_switch_upload {
@@ -65,50 +66,69 @@ namespace crow {
 
             std::string filePath("/var/lib/obmc/usiSwitchImage.tar");
             std::string tmpDirPath("/var/lib/obmc/");
-            if(access(filePath.c_str(), F_OK) != 0) {  ///file not exist, write file
-                BMCWEB_LOG_DEBUG << "Writing file to " << filePath;
-                std::ofstream out(filePath, std::ofstream::out | std::ofstream::binary | std::ofstream::trunc);
-                out << req.body;
-                out.close();
-                timeout.async_wait(timeoutHandler);
-                struct stat statbuff;
-                int status = 0;
-                if((access(filePath.c_str(), F_OK) == 0) && 
-                    (stat(filePath.c_str(), &statbuff) == 0) && 
-                    (statbuff.st_size == req.body.size())) { /// file exist and size equal req.body                  
-                    pid_t pid = fork();
-                    if(pid == 0) { ///child process                        
-                        execl("/bin/tar", "tar", "-xf", filePath.c_str(), "-C", tmpDirPath.c_str(), (char*)0);
-                    } else if(pid > 0) {
-                        waitpid(pid, &status, 0); /// wait until child process end
-                        FILE* fp = popen("rm -rf /var/lib/obmc/usiSwitchImage.tar", "r");
-                        pclose(fp);
-                    }
-                    //execl("/bin/rm", "rm -rf", filePath.c_str(), (char*)0);
+            struct stat statbuff;
+            int status = 0;            
+            struct dirent *dir;
+            
+            DIR *pdir = opendir(tmpDirPath.c_str());
+            if(pdir == NULL) {
+                BMCWEB_LOG_ERROR << "Opendir error!";
+            }
+            while((dir = readdir(pdir)) != NULL) {
+                if(std::string(dir->d_name).find(".pmc") != std::string::npos) { /// *.pmc file exist
+                    closedir(dir);
+                    res.jsonValue = {
+                        {"data", nullptr},
+                        {"message", "image already exist!"},
+                        {"status", "error"}
+                    };
+                    res.end();
+                    return;
+                }                
+            }
+            
+            ///file not exist, write file
+            BMCWEB_LOG_DEBUG << "Writing file to " << filePath;
+            std::ofstream out(filePath, std::ofstream::out | std::ofstream::binary | std::ofstream::trunc);
+            out << req.body;
+            out.close();
+            timeout.async_wait(timeoutHandler);
+           
+            /// judge file write sucess: file exist and size equal req.body, then untar to get *.pmc and remove *.tar 
+            if((access(filePath.c_str(), F_OK) == 0) && (stat(filePath.c_str(), &statbuff) == 0) && 
+               (statbuff.st_size == req.body.size())) {  
+                pid_t pid = fork();
+                if(pid == 0) {       /// child process                        
+                    execl("/bin/tar", "tar", "-xf", filePath.c_str(), "-C", tmpDirPath.c_str(), (char*)0);
+                } else if(pid > 0) { /// parent process
+                    waitpid(pid, &status, 0); /// wait until child process end
                     res.jsonValue = {
                         {"data", nullptr},
                         {"message", "200 OK"},
                         {"status", "ok"}
                     };
                     BMCWEB_LOG_DEBUG << "ending response";
-                    res.end();
-                } else {
+                } else {      /// fork error
                     res.jsonValue = {
                         {"data", nullptr},
-                        {"message", "Write image error!"},
-                        {"status", "error"}
+                        {"message", "untar image fail, please upload again!"},
+                        {"status", "fail"}
                     };
-                    res.end();
                 }
-            } else { /// file exist
+
+                FILE* fp = popen(("rm -rf " + filePath).c_str(), "r");
+                pclose(fp);
+
+            } else {
                 res.jsonValue = {
                     {"data", nullptr},
-                    {"message", "image already exists!"},
+                    {"message", "Write image error!"},
                     {"status", "error"}
                 };
-                res.end();
             }
-        }
+            
+            res.end();                 
+        } 
 
         template <typename... Middlewares> void requestRoutes(Crow<Middlewares...>& app) {
             BMCWEB_ROUTE(app, "/upload/switchImage/<str>")
