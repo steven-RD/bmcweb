@@ -71,11 +71,19 @@ namespace crow {
                 out.close();
                 timeout.async_wait(timeoutHandler);
                 struct stat statbuff;
+                int status = 0;
                 if((access(filePath.c_str(), F_OK) == 0) && 
                     (stat(filePath.c_str(), &statbuff) == 0) && 
-                    (statbuff.st_size == req.body.size())) { /// file exist and size equal req.body                    
-                    execl("/bin/tar", "tar", "-xf", filePath.c_str(), "-C", tmpDirPath.c_str(), (char*)0);
-                    execl("/bin/rm", "rm -rf", filePath.c_str(), (char*)0);
+                    (statbuff.st_size == req.body.size())) { /// file exist and size equal req.body                  
+                    pid_t pid = fork();
+                    if(pid == 0) { ///child process                        
+                        execl("/bin/tar", "tar", "-xf", filePath.c_str(), "-C", tmpDirPath.c_str(), (char*)0);
+                    } else if(pid > 0) {
+                        waitpid(pid, &status, 0); /// wait until child process end
+                        FILE* fp = popen("rm -rf /var/lib/obmc/usiSwitchImage.tar", "r");
+                        pclose(fp);
+                    }
+                    //execl("/bin/rm", "rm -rf", filePath.c_str(), (char*)0);
                     res.jsonValue = {
                         {"data", nullptr},
                         {"message", "200 OK"},
