@@ -24,6 +24,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <stdio.h>
+#include <sys/wait.h>
 
 namespace crow {
     namespace usi_switch_upload {
