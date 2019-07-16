@@ -57,6 +57,8 @@ namespace redfish {
             asyncResp->res.jsonValue["Firmware"]["@odata.id2"] = "/redfish/v1/Switch/Ready";
             asyncResp->res.jsonValue["Firmware"]["@odata.id3"] = "/redfish/v1/Switch/Update";
             asyncResp->res.jsonValue["Firmware"]["@odata.id4"] = "/redfish/v1/Switch/Activate";
+            asyncResp->res.jsonValue["Firmware"]["@odata.id5"] = "/redfish/v1/Switch/ImageFile";
+            asyncResp->res.jsonValue["Firmware"]["@odata.id6"] = "/redfish/v1/Switch/Delete";
         }
 
     };
@@ -578,7 +580,7 @@ namespace redfish {
             "com.usi.Ssdarray.Firmware",
             "/xyz/openbmc_project/ssdarray/firmware/imagefile",
             "org.freedesktop.DBus.Properties", "Get",
-            "com.usi.Ssdarray.ImageFile");
+            "com.usi.Ssdarray.Imagefile", "Status");
         }
         
     };
