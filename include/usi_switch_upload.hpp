@@ -76,7 +76,7 @@ namespace crow {
             }
             while((dir = readdir(pdir)) != NULL) {
                 if(std::string(dir->d_name).find(".pmc") != std::string::npos) { /// *.pmc file exist
-                    closedir(dir);
+                    closedir(pdir);
                     res.jsonValue = {
                         {"data", nullptr},
                         {"message", "image already exist!"},
