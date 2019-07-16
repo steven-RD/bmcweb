@@ -116,9 +116,6 @@ namespace crow {
                     };
                 }
 
-                FILE* fp = popen(("rm -rf " + filePath).c_str(), "r");
-                pclose(fp);
-
             } else {
                 res.jsonValue = {
                     {"data", nullptr},
@@ -126,7 +123,9 @@ namespace crow {
                     {"status", "error"}
                 };
             }
-            
+
+            FILE* fp = popen(("rm -rf " + filePath).c_str(), "r");
+            pclose(fp);
             res.end();                 
         } 
 
