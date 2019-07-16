@@ -64,6 +64,8 @@ namespace redfish {
             nodes.emplace_back(std::make_unique<Ready>(app));
             nodes.emplace_back(std::make_unique<Update>(app));         
             nodes.emplace_back(std::make_unique<Activate>(app));
+            nodes.emplace_back(std::make_unique<Delete>(app));
+            nodes.emplace_back(std::make_unique<ImageFile>(app));
             nodes.emplace_back(std::make_unique<Control>(app));
             nodes.emplace_back(std::make_unique<PowerSupply>(app));
             nodes.emplace_back(std::make_unique<PowerSwitch>(app));
@@ -75,7 +77,8 @@ namespace redfish {
             nodes.emplace_back(std::make_unique<CableInfo>(app));  
             nodes.emplace_back(std::make_unique<SsdInfo>(app)); 
             nodes.emplace_back(std::make_unique<PatopoInfo>(app)); 
-            nodes.emplace_back(std::make_unique<AllInformations>(app)); 
+            nodes.emplace_back(std::make_unique<AllInformations>(app));
+            
             
             nodes.emplace_back(std::make_unique<AccountService>(app));
             nodes.emplace_back(std::make_unique<AccountsCollection>(app));
@@ -132,7 +135,7 @@ namespace redfish {
             nodes.emplace_back(std::make_unique<SystemsCollection>(app));
             nodes.emplace_back(std::make_unique<Systems>(app));
             nodes.emplace_back(std::make_unique<SystemActionsReset>(app));
-#ifdef BMCWEB_ENABLE_REDFISH_DBUS_LOG_ENTRIES
+#ifndef BMCWEB_ENABLE_REDFISH_DBUS_LOG_ENTRIES ///modify by USI Steven 20190716 ifdef->ifndef
             nodes.emplace_back(std::make_unique<DBusLogServiceActionsClear>(app));
 #endif
 

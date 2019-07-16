@@ -112,8 +112,11 @@ namespace redfish {
                                 std::get_if<std::vector<std::pair<std::string, std::string>>>(&property);
                         
                         if(value != nullptr){
-                            asyncResp->res.jsonValue["Version"][(*value)[0].first] = (*value)[0].second;
-                            asyncResp->res.jsonValue["Version"][(*value)[1].first] = (*value)[1].second;
+                            for(std::pair<std::string, std::string> p : *value) {
+                                asyncResp->res.jsonValue["Version"][p.first] = p.second;
+                            }
+                            //asyncResp->res.jsonValue["Version"][(*value)[0].first] = (*value)[0].second;
+                            //asyncResp->res.jsonValue["Version"][(*value)[1].first] = (*value)[1].second;
                         }
                     },
             "com.usi.Ssdarray.Firmware",
@@ -416,6 +419,168 @@ namespace redfish {
             }
         }
 
+    };
+    
+    
+    class Delete : public Node {
+    public:
+
+        Delete(CrowApp& app) : Node(app, "/redfish/v1/Switch/Delete/") {
+            entityPrivileges = {
+                {boost::beast::http::verb::get,{
+                        {"ConfigureUsers"},
+                        {"ConfigureManager"}}},
+                {boost::beast::http::verb::head,{
+                        {"Login"}}},
+                {boost::beast::http::verb::patch,{
+                        {"ConfigureUsers"}}},
+                {boost::beast::http::verb::put,{
+                        {"ConfigureUsers"}}},
+                {boost::beast::http::verb::delete_,{
+                        {"ConfigureUsers"}}},
+                {boost::beast::http::verb::post,{
+                        {"ConfigureUsers"}}}
+            };
+        }
+
+    private:
+
+        void doGet(crow::Response& res, const crow::Request& req,
+                const std::vector<std::string>& params) override {
+
+            auto asyncResp = std::make_shared<AsyncResp>(res);
+            res.jsonValue = {
+                {"@odata.context", "/redfish/v1/$metadata#USI.Switch.FirmwareService.Delete"},
+                {"@odata.id", "/redfish/v1/Switch/Delete"},
+                {"@odata.type", "#Delete.v1_1_0.Delete"},
+                {"Name", "Delete Information"},
+                {"Description", "Get Delete Information"}
+            };
+            
+            crow::connections::systemBus->async_method_call(
+                    [asyncResp](
+                    const boost::system::error_code ec,
+                    const std::vector<std::pair<std::string,
+                    std::variant<std::string, uint32_t>>>& propertiesList) {
+                        if (ec) {
+                            messages::internalError(asyncResp->res);
+                            return;
+                        }
+                        BMCWEB_LOG_DEBUG << "Got " << propertiesList.size()
+                                << "properties for FirmwareService Update";
+
+                        for (const std::pair<std::string, std::variant<std::string, uint32_t>>&
+                                property : propertiesList) {
+                            if (property.first == "Status") {
+                                const std::string* value =
+                                        std::get_if<std::string>(&property.second);
+                                if (value != nullptr) {
+                                    asyncResp->res.jsonValue["Status"] = *value;
+                                }
+                            }
+                            if (property.first == "Value") {
+                                const uint32_t* value =
+                                        std::get_if<uint32_t>(&property.second);
+                                if (value != nullptr) {
+                                    asyncResp->res.jsonValue["Value"] = *value;
+                                }
+                            }
+                        }
+                    },
+            "com.usi.Ssdarray.Firmware",
+            "/xyz/openbmc_project/ssdarray/firmware/delete",
+            "org.freedesktop.DBus.Properties", "GetAll",
+            "com.usi.Ssdarray.Delete");
+        }
+        
+        void doPatch(crow::Response& res, const crow::Request& req,
+                const std::vector<std::string>& params) override {           
+            auto asyncResp = std::make_shared<AsyncResp>(res);
+            
+            std::optional<uint32_t> value;
+            if (!json_util::readJson(req, res, "Value", value)) {
+                return;
+            }
+            if(value) {
+                crow::connections::systemBus->async_method_call(
+                        [this, asyncResp, value](
+                        const boost::system::error_code ec) {
+                            if (ec) {
+                                messages::internalError(asyncResp->res);
+                                return;
+                            }
+                            messages::success(asyncResp->res);
+                        },
+                "com.usi.Ssdarray.Firmware",
+                "/xyz/openbmc_project/ssdarray/firmware/delete",
+                "org.freedesktop.DBus.Properties", "Set",
+                "com.usi.Ssdarray.Delete", "Value", std::variant<uint32_t>(*value));
+            }
+        }
+
+    };
+    
+    class ImageFile : public node {        
+    public:
+        
+        ImageFile(CrowApp& app) : Node(app, "/redfish/v1/Switch/ImageFile/") {
+            entityPrivileges = {
+                {boost::beast::http::verb::get,{
+                        {"ConfigureUsers"},
+                        {"ConfigureManager"}}},
+                {boost::beast::http::verb::head,{
+                        {"Login"}}},
+                {boost::beast::http::verb::patch,{
+                        {"ConfigureUsers"}}},
+                {boost::beast::http::verb::put,{
+                        {"ConfigureUsers"}}},
+                {boost::beast::http::verb::delete_,{
+                        {"ConfigureUsers"}}},
+                {boost::beast::http::verb::post,{
+                        {"ConfigureUsers"}}}
+            };
+        }
+        
+    private:
+        
+        void doGet(crow::Response& res, const crow::Request& req,
+                const std::vector<std::string>& params) override {
+            
+            auto asyncResp = std::make_shared<AsyncResp>(res);
+            res.jsonValue = {
+                {"@odata.context", "/redfish/v1/$metadata#USI.Switch.FirmwareService.ImageFile"},
+                {"@odata.id", "/redfish/v1/Switch/ImageFile"},
+                {"@odata.type", "#ImageFile.v1_1_0.ImageFile"},
+                {"Name", "ImageFile Information"},
+                {"Description", "Get ImageFile Information"}
+            };
+            
+            crow::connections::systemBus->async_method_call(
+                    [asyncResp](
+                    const boost::system::error_code ec,
+                    const std::variant<std::vector<std::pair<std::string, std::string>>>& property){
+                        if (ec) {
+                            messages::internalError(asyncResp->res);
+                            return;
+                        }
+                        BMCWEB_LOG_DEBUG << "Got " 
+                                << "properties for FirmwareService ImageFile";
+                        
+                        const std::vector<std::pair<std::string, std::string>> *value =
+                                std::get_if<std::vector<std::pair<std::string, std::string>>>(&property);
+                        
+                        if(value != nullptr){
+                            for(std::pair<std::string, std::string> p : *value) {
+                                asyncResp->res.jsonValue["Status"][p.first] = p.second;
+                            }
+                        }
+                    },
+            "com.usi.Ssdarray.Firmware",
+            "/xyz/openbmc_project/ssdarray/firmware/imagefile",
+            "org.freedesktop.DBus.Properties", "Get",
+            "com.usi.Ssdarray.ImageFile");
+        }
+        
     };
     
 }
