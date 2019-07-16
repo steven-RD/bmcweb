@@ -520,7 +520,7 @@ namespace redfish {
 
     };
     
-    class ImageFile : public node {        
+    class ImageFile : public Node {        
     public:
         
         ImageFile(CrowApp& app) : Node(app, "/redfish/v1/Switch/ImageFile/") {
