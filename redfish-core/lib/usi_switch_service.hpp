@@ -100,6 +100,14 @@ class SwitchService : public Node {
                     {
                         {"@odata.id", "/redfish/v1/Switch/Activate"}
                     }},
+                {"ImageFile",
+                    {
+                        {"@odata.id", "/redfish/v1/Switch/ImageFile"}
+                    }},
+                {"Delete",
+                    {
+                        {"@odata.id", "/redfish/v1/Switch/Delete"}
+                    }},
                   
                 {"FirmwareService",
                     {
