@@ -293,7 +293,7 @@ namespace redfish {
             }
             if (status) {
                 crow::connections::systemBus->async_method_call(
-                    [this, asyncResp, value](
+                    [this, asyncResp, status](
                     const boost::system::error_code ec) {
                         if (ec) {
                             messages::internalError(asyncResp->res);
@@ -372,7 +372,7 @@ namespace redfish {
                             return;
                         }
                         BMCWEB_LOG_DEBUG << "Got " << propertiesList.size()
-                                << "properties for FirmwareService Update";
+                                << "properties for Firmware Activate";
 
                         for (const std::pair<std::string, std::variant<std::string, uint32_t>>&
                                 property : propertiesList) {
