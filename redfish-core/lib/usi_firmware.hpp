@@ -229,29 +229,31 @@ namespace redfish {
                 const std::vector<std::string>& params) override {
 
             auto asyncResp = std::make_shared<AsyncResp>(res);
-            res.jsonValue = {
-                {"@odata.context", "/redfish/v1/$metadata#USI.Switch.FirmwareService.Update"},
-                {"@odata.id", "/redfish/v1/Managers/Switch/Update"},
-                {"@odata.type", "#Update.v1_1_0.Update"},
-                {"Name", "Update Information"},
-                {"Description", "Get Update Status"}
-            };
+//            res.jsonValue = {
+//                {"@odata.context", "/redfish/v1/$metadata#USI.Switch.FirmwareService.Update"},
+//                {"@odata.id", "/redfish/v1/Managers/Switch/Update"},
+//                {"@odata.type", "#Update.v1_1_0.Update"},
+//                {"Name", "Update Information"},
+//                {"Description", "Update Switch Image"}
+//            };
 
             crow::connections::systemBus->async_method_call(
                     [asyncResp](
                     const boost::system::error_code ec,
                     const std::variant<std::string>& property) {
                         if (ec) {
-                            messages::internalError(asyncResp->res);
+                            asyncResp->res.jsonValue["ec"] = ec;
+                            //messages::internalError(asyncResp->res);
                             return;
                         }
                         BMCWEB_LOG_DEBUG << "Got properties for Firmware Update";
-
-                        const std::string* value = 
-                                std::get_if<std::string>(&property);
-                        if(value != nullptr){
-                            asyncResp->res.jsonValue["Status"] = *value;
-                        }
+                        
+                        messages::success(asyncResp->res);
+//                        const std::string* value = 
+//                                std::get_if<std::string>(&property);
+//                        if(value != nullptr){
+//                            asyncResp->res.jsonValue["Status"] = *value;
+//                        }
 //                        for (const std::pair<std::string, std::variant<std::string, uint32_t>>&
 //                                property : propertiesList) {
 //                            if (property.first == "Status") {
@@ -283,29 +285,29 @@ namespace redfish {
             "com.usi.Ssdarray.Update", "Status");
         }
         
-        void doPatch(crow::Response& res, const crow::Request& req,
-                const std::vector<std::string>& params) override {            
-            auto asyncResp = std::make_shared<AsyncResp>(res);
-            
-            std::optional<std::string> status;
-            if (!json_util::readJson(req, res, "Status", status)) {
-                return;
-            }
-            if (status) {
-                crow::connections::systemBus->async_method_call(
-                    [this, asyncResp, status](
-                    const boost::system::error_code ec) {
-                        if (ec) {
-                            messages::internalError(asyncResp->res);
-                            return;
-                        }
-                        messages::success(asyncResp->res);
-                    },
-                "com.usi.Ssdarray.Firmware",
-                "/xyz/openbmc_project/ssdarray/firmware/update",
-                "org.freedesktop.DBus.Properties", "Set",
-                "com.usi.Ssdarray.Update", "Status", std::variant<std::string>(*status)); 
-            }
+//        void doPatch(crow::Response& res, const crow::Request& req,
+//                const std::vector<std::string>& params) override {            
+//            auto asyncResp = std::make_shared<AsyncResp>(res);
+//            
+//            std::optional<std::string> status;
+//            if (!json_util::readJson(req, res, "Status", status)) {
+//                return;
+//            }
+//            if (status) {
+//                crow::connections::systemBus->async_method_call(
+//                    [this, asyncResp, status](
+//                    const boost::system::error_code ec) {
+//                        if (ec) {
+//                            messages::internalError(asyncResp->res);
+//                            return;
+//                        }
+//                        messages::success(asyncResp->res);
+//                    },
+//                "com.usi.Ssdarray.Firmware",
+//                "/xyz/openbmc_project/ssdarray/firmware/update",
+//                "org.freedesktop.DBus.Properties", "Set",
+//                "com.usi.Ssdarray.Update", "Status", std::variant<std::string>(*status)); 
+//            }
 //            if(imageId) {
 //                crow::connections::systemBus->async_method_call(
 //                    [this, asyncResp, imageId](
@@ -322,7 +324,7 @@ namespace redfish {
 //                "com.usi.Ssdarray.Update", "Imageid", 
 //                std::variant<std::string>(*imageId)); 
 //            }
-        }
+//        }
 
     };
     
