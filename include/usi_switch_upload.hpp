@@ -55,8 +55,7 @@ namespace crow {
                 res.jsonValue = {
                     {"data",
                         {
-                            {"description",
-                                "Version already exists or failed to be extracted"}
+                            {"description", "Upload image time out!"}
                         }},
                     {"message", "400 Bad Request"},
                     {"status", "error"}
@@ -96,7 +95,12 @@ namespace crow {
            
             /// judge file write sucess: file exist and size equal req.body, then untar to get *.pmc and remove *.tar 
             if((access(filePath.c_str(), F_OK) == 0) && (stat(filePath.c_str(), &statbuff) == 0) && 
-               (statbuff.st_size == req.body.size())) {  
+               (statbuff.st_size == req.body.size())) {
+                boost::system::error_code ec;
+                timeout.cancel(ec);
+                if (ec) {
+                    BMCWEB_LOG_ERROR << "error canceling timer " << ec;
+                }
                 pid_t pid = fork();
                 if(pid == 0) {       /// child process                        
                     execl("/bin/tar", "tar", "-xf", filePath.c_str(), "-C", tmpDirPath.c_str(), (char*)0);

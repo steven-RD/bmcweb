@@ -229,21 +229,20 @@ namespace redfish {
                 const std::vector<std::string>& params) override {
 
             auto asyncResp = std::make_shared<AsyncResp>(res);
-//            res.jsonValue = {
-//                {"@odata.context", "/redfish/v1/$metadata#USI.Switch.FirmwareService.Update"},
-//                {"@odata.id", "/redfish/v1/Managers/Switch/Update"},
-//                {"@odata.type", "#Update.v1_1_0.Update"},
-//                {"Name", "Update Information"},
-//                {"Description", "Update Switch Image"}
-//            };
+            res.jsonValue = {
+                {"@odata.context", "/redfish/v1/$metadata#USI.Switch.FirmwareService.Update"},
+                {"@odata.id", "/redfish/v1/Managers/Switch/Update"},
+                {"@odata.type", "#Update.v1_1_0.Update"},
+                {"Name", "Update Information"},
+                {"Description", "Update Switch Image"}
+            };
 
             crow::connections::systemBus->async_method_call(
                     [asyncResp](
                     const boost::system::error_code ec,
                     const std::variant<std::string>& property) {
                         if (ec) {
-                            asyncResp->res.jsonValue["ec"] = ec;
-                            //messages::internalError(asyncResp->res);
+                            messages::internalError(asyncResp->res);
                             return;
                         }
                         BMCWEB_LOG_DEBUG << "Got properties for Firmware Update";
