@@ -288,9 +288,9 @@ namespace redfish {
             if (!json_util::readJson(req, res, "Value", value)) {
                 return;
             }
-            if (status) {
+            if (value) {
                 crow::connections::systemBus->async_method_call(
-                    [this, asyncResp, status](
+                    [this, asyncResp, value](
                     const boost::system::error_code ec) {
                         if (ec) {
                             messages::internalError(asyncResp->res);
